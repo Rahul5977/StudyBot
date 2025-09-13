@@ -97,20 +97,20 @@ const Home = () => {
           )}
 
           {activeTab === 'chat' && (
-            <div className="h-[600px] flex flex-col">
-              <div className="p-6 border-b border-gray-200">
+            <div className="h-[70vh] min-h-[500px] max-h-[800px] flex flex-col">
+              <div className="p-6 border-b border-gray-200 flex-shrink-0">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Chat with Your Documents</h2>
                 <p className="text-gray-600">Ask questions about your uploaded documents and get intelligent answers</p>
               </div>
               
-              <div className="flex-1 flex">
-                <div className="flex-1">
+              <div className="flex-1 flex min-h-0">
+                <div className="flex-1 min-w-0">
                   <ChatBox onStepsUpdate={setCurrentSteps} />
                 </div>
                 
                 {/* Steps Visualizer Sidebar */}
                 {currentSteps.length > 0 && (
-                  <div className="w-80 border-l border-gray-200 p-4 bg-gray-50">
+                  <div className="w-80 border-l border-gray-200 p-4 bg-gray-50 flex-shrink-0 overflow-y-auto">
                     <StepsVisualizer steps={currentSteps} />
                   </div>
                 )}
