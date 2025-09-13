@@ -1,1 +1,8 @@
-# Python requirements
+fastapi
+uvicorn
+pydantic
+pdfplumber
+pymupdf
+pandas
+openpyxl
+python-multipart
