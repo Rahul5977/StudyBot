@@ -110,7 +110,7 @@ class QdrantDB:
                 query_filter=query_filter,
                 limit=top_k,
                 with_payload=True,
-                score_threshold=0.5  # Minimum similarity threshold
+                score_threshold=0.1  # Lower similarity threshold for better retrieval
             )
             
             chunks = []
