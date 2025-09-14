@@ -34,7 +34,11 @@ export const uploadExcel = async (file) => {
   return response.json();
 };
 
-export const chatWithAI = async (query, sessionId = null) => {
+export const chatWithAI = async (
+  query,
+  sessionId = null,
+  useMultiAgent = true
+) => {
   const response = await fetch(`${API_BASE_URL}/chat`, {
     method: "POST",
     headers: {
@@ -43,6 +47,7 @@ export const chatWithAI = async (query, sessionId = null) => {
     body: JSON.stringify({
       query,
       session_id: sessionId,
+      use_multi_agent: useMultiAgent,
     }),
   });
 
@@ -100,6 +105,60 @@ export const healthCheck = async () => {
 
   if (!response.ok) {
     throw new Error(`Health check failed: ${response.statusText}`);
+  }
+
+  return response.json();
+};
+
+// Study Plan API functions
+export const createStudyPlan = async (
+  topic,
+  preferences = null,
+  includeSearch = true
+) => {
+  const response = await fetch(`${API_BASE_URL}/plan/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      topic,
+      preferences,
+      include_search: includeSearch,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Study plan creation failed: ${response.statusText}`);
+  }
+
+  return response.json();
+};
+
+export const refineStudyPlan = async (currentPlan, refinementRequest) => {
+  const response = await fetch(`${API_BASE_URL}/plan/refine`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      current_plan: currentPlan,
+      refinement_request: refinementRequest,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Study plan refinement failed: ${response.statusText}`);
+  }
+
+  return response.json();
+};
+
+export const getPlanTemplate = async (difficulty = "intermediate") => {
+  const response = await fetch(`${API_BASE_URL}/plan/template/${difficulty}`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to get plan template: ${response.statusText}`);
   }
 
   return response.json();
