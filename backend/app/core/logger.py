@@ -89,6 +89,9 @@ class InteractionLogger:
 # Configure logging
 def setup_logging():
     """Setup application logging"""
+    # Create logs directory first
+    os.makedirs('logs', exist_ok=True)
+    
     log_level = logging.DEBUG if settings.debug else logging.INFO
     
     logging.basicConfig(
@@ -99,9 +102,18 @@ def setup_logging():
             logging.FileHandler('logs/app.log')
         ]
     )
-    
-    # Create logs directory
-    os.makedirs('logs', exist_ok=True)
 
 # Global logger instance
 interaction_logger = InteractionLogger()
+
+# Standard logger for general application logging
+logger = logging.getLogger("studybuddy")
+logger.setLevel(logging.INFO)
+
+# Create console handler if it doesn't exist
+if not logger.handlers:
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)

@@ -4,12 +4,20 @@ Configuration settings for StudyBuddy
 import os
 from pydantic_settings import BaseSettings
 from typing import Optional
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+# Look for .env file in the parent directory (project root)
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../../../.env"))
 
 class Settings(BaseSettings):
     """Application settings"""
     
     # OpenAI
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
+    
+    # Tavily (Web Search)
+    tavily_api_key: str = os.getenv("TAVILY_API_KEY", "")
     
     # Qdrant
     qdrant_host: str = os.getenv("QDRANT_HOST", "localhost")
