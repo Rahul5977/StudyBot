@@ -10,7 +10,7 @@ import uuid
 import logging
 
 from ..core.db import qdrant_db
-from ..core.embeddings import embeddings_service
+from ..core.embeddings import get_embeddings_service
 from ..agents.chunker import chunk_text
 from ..core.config import settings
 
@@ -33,6 +33,7 @@ def process_and_store_chunks(chunks: List[Dict[str, Any]], doc_id: str, filename
         
         # Generate embeddings
         logger.info(f"Generating embeddings for {len(texts)} chunks")
+        embeddings_service = get_embeddings_service()
         embeddings = embeddings_service.embed_texts(texts)
         
         # Add metadata to chunks
