@@ -80,16 +80,21 @@ const ChatBox = () => {
         </p>
         <div className="space-y-2 max-h-32 overflow-y-auto">
           {chunks.map((chunk, index) => (
-            <div key={index} className="text-xs text-blue-700 p-2 bg-white rounded border">
+            <div
+              key={index}
+              className="text-xs text-blue-700 p-2 bg-white rounded border"
+            >
               <div className="font-medium mb-1">
-                📄 {chunk.metadata?.source_file || "Unknown"} 
+                📄 {chunk.metadata?.source_file || "Unknown"}
                 {chunk.page && ` - Page ${chunk.page}`}
                 <span className="ml-2 text-blue-600">
                   (Score: {(chunk.score * 100).toFixed(1)}%)
                 </span>
               </div>
               <div className="text-gray-600 line-clamp-2">
-                {chunk.text.length > 150 ? `${chunk.text.substring(0, 150)}...` : chunk.text}
+                {chunk.text.length > 150
+                  ? `${chunk.text.substring(0, 150)}...`
+                  : chunk.text}
               </div>
             </div>
           ))}
@@ -164,7 +169,9 @@ const ChatBox = () => {
                 </div>
               )}
 
-              <div className="whitespace-pre-wrap break-words">{message.content}</div>
+              <div className="whitespace-pre-wrap break-words">
+                {message.content}
+              </div>
 
               {message.type === "ai" &&
                 formatContextChunks(message.contextChunks)}

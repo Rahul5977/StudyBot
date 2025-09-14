@@ -3,29 +3,34 @@
 ## 🐛 **Issues Fixed**
 
 ### **Problem 1: Chat Not Scrollable**
+
 - **Root Cause**: Fixed height container (`h-[600px]`) was preventing proper scrolling
 - **Solution**: Changed to responsive height (`h-[70vh]`) with proper flex layout
 
 ### **Problem 2: Messages Area Overflow**
+
 - **Root Cause**: Messages container didn't have proper height constraints
 - **Solution**: Added `min-h-0` and proper flex properties for scrollable messages area
 
 ### **Problem 3: Layout Constraints**
+
 - **Root Cause**: Fixed dimensions were causing layout issues on different screen sizes
 - **Solution**: Implemented responsive design with min/max height constraints
 
 ## ✅ **Improvements Applied**
 
 ### **1. Home.jsx Layout Fixes**
+
 ```jsx
 // OLD: Fixed height causing scroll issues
 <div className="h-[600px] flex flex-col">
 
-// NEW: Responsive height with proper constraints  
+// NEW: Responsive height with proper constraints
 <div className="h-[70vh] min-h-[500px] max-h-[800px] flex flex-col">
 ```
 
 **Key Changes:**
+
 - ✅ Responsive height: `70vh` (70% of viewport height)
 - ✅ Minimum height: `500px` (ensures usability on small screens)
 - ✅ Maximum height: `800px` (prevents excessive height on large screens)
@@ -33,12 +38,14 @@
 - ✅ Added `flex-shrink-0` to prevent header/input compression
 
 ### **2. ChatBox.jsx Scrolling Fixes**
+
 ```jsx
 // NEW: Proper scrollable messages container
 <div className="flex-1 overflow-y-auto p-6 space-y-4 min-h-0">
 ```
 
 **Key Improvements:**
+
 - ✅ **Scrollable Messages**: `overflow-y-auto` with `min-h-0` for proper flex behavior
 - ✅ **Fixed Header**: Header stays at top with `flex-shrink-0`
 - ✅ **Fixed Input**: Input area stays at bottom with `flex-shrink-0`
@@ -46,12 +53,14 @@
 - ✅ **Word Wrapping**: Added `break-words` for long text handling
 
 ### **3. Enhanced Context Chunks Display**
+
 ```jsx
 // NEW: Compact, scrollable context chunks
 <div className="mt-3 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400 max-h-40 overflow-y-auto">
 ```
 
 **Features:**
+
 - ✅ **Scrollable Context**: Max height with internal scrolling
 - ✅ **Compact Cards**: Each chunk in individual card format
 - ✅ **Source Information**: Shows filename, page, and similarity score
@@ -59,6 +68,7 @@
 - ✅ **Better Visual Hierarchy**: Clear separation between chunks
 
 ### **4. UI Enhancements**
+
 ```jsx
 // NEW: Clear chat functionality with button
 <button onClick={handleClearChat} className="bg-white/20 hover:bg-white/30...">
@@ -67,12 +77,14 @@
 ```
 
 **New Features:**
+
 - ✅ **Clear Chat Button**: Reset conversation and session
 - ✅ **Responsive Input**: Textarea with max height and proper resize
 - ✅ **Better Spacing**: Improved padding and margins throughout
 - ✅ **Visual Indicators**: Better loading states and message types
 
 ### **5. CSS Improvements**
+
 ```css
 /* NEW: Line clamp utilities for text truncation */
 .line-clamp-2 {
@@ -86,16 +98,19 @@
 ## 📱 **Responsive Design**
 
 ### **Desktop (Large Screens)**
+
 - ✅ Maximum height: 800px
 - ✅ Optimal chat experience with full features
 - ✅ Side-by-side layout with steps visualizer
 
-### **Tablet (Medium Screens)**  
+### **Tablet (Medium Screens)**
+
 - ✅ Responsive height: 70% of viewport
 - ✅ Maintains functionality with adjusted spacing
 - ✅ Proper scrolling behavior
 
 ### **Mobile (Small Screens)**
+
 - ✅ Minimum height: 500px ensures usability
 - ✅ Touch-friendly interface
 - ✅ Proper text wrapping and spacing
@@ -103,6 +118,7 @@
 ## 🎯 **User Experience Improvements**
 
 ### **Before Fixes:**
+
 - ❌ Chat messages were not scrollable
 - ❌ Couldn't see previous conversations
 - ❌ Fixed height caused layout issues
@@ -110,6 +126,7 @@
 - ❌ No way to clear chat history
 
 ### **After Fixes:**
+
 - ✅ **Fully Scrollable**: Smooth scrolling through entire conversation history
 - ✅ **Auto-scroll**: Automatically scrolls to new messages
 - ✅ **Responsive Layout**: Works on all screen sizes
@@ -121,6 +138,7 @@
 ## 🔧 **Technical Details**
 
 ### **Flex Layout Structure:**
+
 ```
 📱 Chat Container (h-[70vh] min-h-[500px] max-h-[800px])
 ├── 📄 Header (flex-shrink-0)
@@ -129,6 +147,7 @@
 ```
 
 ### **Key CSS Properties:**
+
 - `flex-1`: Takes all available space
 - `overflow-y-auto`: Enables vertical scrolling
 - `min-h-0`: Allows flex item to shrink below content size
@@ -142,7 +161,7 @@
 ✅ **Responsive**: Works on different screen sizes  
 ✅ **Context Display**: Sources are compact and readable  
 ✅ **Clear Function**: Chat can be cleared and restarted  
-✅ **Performance**: Smooth scrolling without lag  
+✅ **Performance**: Smooth scrolling without lag
 
 ## 📋 **Usage Instructions**
 

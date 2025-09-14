@@ -4,7 +4,7 @@ import ChatBox from "../components/ChatBox";
 import StepsVisualizer from "../components/StepsVisualizer";
 
 const Home = () => {
-  const [activeTab, setActiveTab] = useState('upload');
+  const [activeTab, setActiveTab] = useState("upload");
   const [currentSteps, setCurrentSteps] = useState([]);
 
   return (
@@ -62,21 +62,21 @@ const Home = () => {
         <div className="flex justify-center mb-8">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-white/20">
             <button
-              onClick={() => setActiveTab('upload')}
+              onClick={() => setActiveTab("upload")}
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
-                activeTab === 'upload'
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'text-gray-600 hover:text-blue-600'
+                activeTab === "upload"
+                  ? "bg-blue-600 text-white shadow-lg"
+                  : "text-gray-600 hover:text-blue-600"
               }`}
             >
               📤 Upload Documents
             </button>
             <button
-              onClick={() => setActiveTab('chat')}
+              onClick={() => setActiveTab("chat")}
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
-                activeTab === 'chat'
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'text-gray-600 hover:text-blue-600'
+                activeTab === "chat"
+                  ? "bg-blue-600 text-white shadow-lg"
+                  : "text-gray-600 hover:text-blue-600"
               }`}
             >
               💬 AI Chat
@@ -86,28 +86,38 @@ const Home = () => {
 
         {/* Content Area */}
         <div className="bg-white/80 backdrop-blur-sm shadow-2xl rounded-3xl border border-white/20 overflow-hidden">
-          {activeTab === 'upload' && (
+          {activeTab === "upload" && (
             <div className="p-8">
               <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Upload Your Documents</h2>
-                <p className="text-gray-600">Upload PDFs or Excel files to get started with AI-powered analysis</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Upload Your Documents
+                </h2>
+                <p className="text-gray-600">
+                  Upload PDFs or Excel files to get started with AI-powered
+                  analysis
+                </p>
               </div>
               <UploadForm />
             </div>
           )}
 
-          {activeTab === 'chat' && (
+          {activeTab === "chat" && (
             <div className="h-[70vh] min-h-[500px] max-h-[800px] flex flex-col">
               <div className="p-6 border-b border-gray-200 flex-shrink-0">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Chat with Your Documents</h2>
-                <p className="text-gray-600">Ask questions about your uploaded documents and get intelligent answers</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Chat with Your Documents
+                </h2>
+                <p className="text-gray-600">
+                  Ask questions about your uploaded documents and get
+                  intelligent answers
+                </p>
               </div>
-              
+
               <div className="flex-1 flex min-h-0">
                 <div className="flex-1 min-w-0">
                   <ChatBox onStepsUpdate={setCurrentSteps} />
                 </div>
-                
+
                 {/* Steps Visualizer Sidebar */}
                 {currentSteps.length > 0 && (
                   <div className="w-80 border-l border-gray-200 p-4 bg-gray-50 flex-shrink-0 overflow-y-auto">
