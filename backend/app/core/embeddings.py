@@ -78,5 +78,12 @@ class EmbeddingsService:
         """
         return self.embed_text(query)
 
-# Global instance
-embeddings_service = EmbeddingsService()
+# Global instance - lazy loaded
+embeddings_service = None
+
+def get_embeddings_service():
+    """Get the global embeddings service instance (lazy loading)"""
+    global embeddings_service
+    if embeddings_service is None:
+        embeddings_service = EmbeddingsService()
+    return embeddings_service
