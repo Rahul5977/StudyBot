@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 
 from ..core.db import qdrant_db
-from ..core.embeddings import embeddings_service
+from ..core.embeddings import get_embeddings_service
 from ..core.config import settings
 from ..core.logger import interaction_logger
 
@@ -19,7 +19,15 @@ class SimpleRAGPipeline:
     """Simplified RAG pipeline using direct OpenAI API calls"""
     
     def __init__(self):
-        self.client = embeddings_service.client  # Reuse OpenAI client
+        self.embeddings_service = None
+        self.client = None
+    
+    def _get_client(self):
+        """Get OpenAI client (lazy loading)"""
+        if self.client is None:
+            self.embeddings_service = get_embeddings_service()
+            self.client = self.embeddings_service.client
+        return self.client
     
     def _build_prompt(self, query: str, context_chunks: List[Dict[str, Any]]) -> str:
         """Build the prompt for the LLM"""
@@ -72,7 +80,11 @@ Answer:"""
             })
             
             # Get query embedding
-            query_embedding = embeddings_service.embed_query(query)
+            # Get embeddings service
+            if self.embeddings_service is None:
+                self.embeddings_service = get_embeddings_service()
+            
+            query_embedding = self.embeddings_service.embed_query(query)
             
             # Search vector store
             context_chunks = qdrant_db.query_chunks(
@@ -98,7 +110,8 @@ Answer:"""
             prompt = self._build_prompt(query, context_chunks)
             
             # Generate response using OpenAI Chat API
-            response = self.client.chat.completions.create(
+            client = self._get_client()
+            response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are StudyBuddy, a helpful AI tutor."},

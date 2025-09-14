@@ -11,7 +11,7 @@ from typing_extensions import Annotated, TypedDict
 import logging
 
 from ..core.db import qdrant_db
-from ..core.embeddings import embeddings_service
+from ..core.embeddings import get_embeddings_service
 from ..core.config import settings
 from ..core.logger import interaction_logger
 
@@ -54,6 +54,7 @@ class StudyBuddyRAG:
             
             try:
                 # Get query embedding
+                embeddings_service = get_embeddings_service()
                 query_embedding = embeddings_service.embed_query(query)
                 
                 # Search vector store
