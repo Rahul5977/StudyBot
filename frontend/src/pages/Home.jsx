@@ -2,10 +2,31 @@ import React, { useState } from "react";
 import UploadForm from "../components/UploadForm";
 import ChatBox from "../components/ChatBox";
 import StepsVisualizer from "../components/StepsVisualizer";
+import PlanEditor from "../components/PlanEditor";
+import { createStudyPlan, getPlanTemplate } from "../utils/api";
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState("upload");
   const [currentSteps, setCurrentSteps] = useState([]);
+  const [studyPlan, setStudyPlan] = useState(null);
+  const [isCreatingPlan, setIsCreatingPlan] = useState(false);
+  const [planTopic, setPlanTopic] = useState("");
+
+  const handleCreatePlan = async () => {
+    if (!planTopic.trim() || isCreatingPlan) return;
+
+    setIsCreatingPlan(true);
+    try {
+      const response = await createStudyPlan(planTopic);
+      if (response.success) {
+        setStudyPlan(response.study_plan);
+      }
+    } catch (error) {
+      console.error("Error creating study plan:", error);
+    } finally {
+      setIsCreatingPlan(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -81,6 +102,16 @@ const Home = () => {
             >
               💬 AI Chat
             </button>
+            <button
+              onClick={() => setActiveTab("plan")}
+              className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                activeTab === "plan"
+                  ? "bg-blue-600 text-white shadow-lg"
+                  : "text-gray-600 hover:text-blue-600"
+              }`}
+            >
+              📋 Study Plans
+            </button>
           </div>
         </div>
 
@@ -122,6 +153,92 @@ const Home = () => {
                 {currentSteps.length > 0 && (
                   <div className="w-80 border-l border-gray-200 p-4 bg-gray-50 flex-shrink-0 overflow-y-auto">
                     <StepsVisualizer steps={currentSteps} />
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "plan" && (
+            <div className="h-[70vh] min-h-[500px] max-h-[800px] flex flex-col">
+              <div className="p-6 border-b border-gray-200 flex-shrink-0">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  AI-Generated Study Plans
+                </h2>
+                <p className="text-gray-600 mb-4">
+                  Create comprehensive study plans for any topic using AI
+                </p>
+
+                {/* Plan Creation Form */}
+                <div className="flex gap-3">
+                  <input
+                    type="text"
+                    placeholder="Enter a topic to create a study plan (e.g., 'Machine Learning', 'React Development')"
+                    value={planTopic}
+                    onChange={(e) => setPlanTopic(e.target.value)}
+                    className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleCreatePlan();
+                    }}
+                  />
+                  <button
+                    onClick={handleCreatePlan}
+                    disabled={!planTopic.trim() || isCreatingPlan}
+                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  >
+                    {isCreatingPlan ? "Creating..." : "Generate Plan"}
+                  </button>
+                </div>
+
+                {isCreatingPlan && (
+                  <div className="mt-4 flex items-center gap-2 text-blue-600">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                    <span className="text-sm">
+                      Creating your personalized study plan...
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-6">
+                {studyPlan ? (
+                  <PlanEditor
+                    studyPlan={studyPlan}
+                    isEditing={true}
+                    onPlanUpdate={setStudyPlan}
+                  />
+                ) : (
+                  <div className="text-center text-gray-500 mt-16">
+                    <div className="text-6xl mb-4">📚</div>
+                    <h3 className="text-xl font-medium mb-2">
+                      No Study Plan Yet
+                    </h3>
+                    <p className="text-gray-400 mb-6">
+                      Enter a topic above to generate a comprehensive study plan
+                    </p>
+
+                    <div className="max-w-md mx-auto">
+                      <h4 className="font-medium text-gray-700 mb-3">
+                        💡 Try these examples:
+                      </h4>
+                      <div className="space-y-2">
+                        {[
+                          "Python Programming for Beginners",
+                          "Machine Learning Fundamentals",
+                          "React Web Development",
+                          "Data Science with Python",
+                          "AWS Cloud Computing",
+                        ].map((example, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setPlanTopic(example)}
+                            className="block w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 hover:border-blue-300 transition-colors"
+                          >
+                            {example}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -223,6 +340,59 @@ const Home = () => {
             </p>
           </div>
         </div>
+
+        {/* Beautiful Footer */}
+        <footer className="mt-20 pt-12 pb-8 border-t border-white/20">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-red-500 rounded-xl flex items-center justify-center mr-3">
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </div>
+              <div className="text-left">
+                <p className="text-gray-700 font-medium">Made with love by</p>
+                <p className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent">
+                  Rahul
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center space-x-6 mb-6">
+              <a
+                href="https://github.com/rahulraj"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                </svg>
+                View on GitHub
+              </a>
+
+              <div className="text-sm text-gray-500">
+                <p>StudyBuddy AI © 2024</p>
+                <p>Powered by OpenAI • LangChain • React</p>
+              </div>
+            </div>
+
+            <div className="text-xs text-gray-400">
+              <p>
+                Built with cutting-edge AI technology to enhance your learning
+                experience
+              </p>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );
