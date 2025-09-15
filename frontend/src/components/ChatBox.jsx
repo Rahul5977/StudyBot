@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { chatWithAI } from "../utils/api";
+import { chatWithAI, listDocuments } from "../utils/api";
 import PlanEditor from "./PlanEditor";
 
 const ChatBox = () => {
@@ -8,7 +8,32 @@ const ChatBox = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState(null);
   const [useMultiAgent, setUseMultiAgent] = useState(true);
+  const [selectedDocId, setSelectedDocId] = useState(null);
+  const [availableDocuments, setAvailableDocuments] = useState([]);
+  const [loadingDocs, setLoadingDocs] = useState(false);
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    loadDocuments();
+  }, []);
+
+  const loadDocuments = async () => {
+    try {
+      setLoadingDocs(true);
+      const result = await listDocuments();
+      if (result.success) {
+        setAvailableDocuments(result.documents);
+        // Auto-select first document if available
+        if (result.documents.length > 0 && !selectedDocId) {
+          setSelectedDocId(result.documents[0].doc_id);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading documents:", error);
+    } finally {
+      setLoadingDocs(false);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -34,7 +59,12 @@ const ChatBox = () => {
     setMessages((prev) => [...prev, { type: "user", content: userMessage }]);
 
     try {
-      const response = await chatWithAI(userMessage, sessionId, useMultiAgent);
+      const response = await chatWithAI(
+        userMessage,
+        sessionId,
+        useMultiAgent,
+        selectedDocId
+      );
 
       // Update session ID if this is the first message
       if (!sessionId) {
@@ -90,7 +120,7 @@ const ChatBox = () => {
               className="text-xs text-blue-700 p-2 bg-white rounded border"
             >
               <div className="font-medium mb-1">
-                📄 {chunk.metadata?.source_file || "Unknown"}
+                📄 {chunk.metadata?.source_file || chunk.filename || "Unknown"}
                 {chunk.page && ` - Page ${chunk.page}`}
                 <span className="ml-2 text-blue-600">
                   (Score: {(chunk.score * 100).toFixed(1)}%)
@@ -197,6 +227,44 @@ const ChatBox = () => {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            {/* Document Selection */}
+            <div className="flex items-center gap-2 mr-4">
+              <label className="text-sm text-blue-100">Document:</label>
+              {loadingDocs ? (
+                <div className="text-sm text-blue-200">Loading...</div>
+              ) : availableDocuments.length > 0 ? (
+                <select
+                  value={selectedDocId || ""}
+                  onChange={(e) => setSelectedDocId(e.target.value)}
+                  className="bg-white/20 text-white border border-white/30 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/50 backdrop-blur-sm"
+                >
+                  <option value="" className="text-gray-800">
+                    Select Document
+                  </option>
+                  {availableDocuments.map((doc) => (
+                    <option
+                      key={doc.doc_id}
+                      value={doc.doc_id}
+                      className="text-gray-800"
+                    >
+                      {doc.title ||
+                        doc.filename ||
+                        `Document ${doc.doc_id.substring(0, 8)}...`}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <div className="text-sm text-blue-200">No documents</div>
+              )}
+              <button
+                onClick={loadDocuments}
+                className="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded text-sm transition-colors"
+                title="Refresh documents"
+              >
+                🔄
+              </button>
+            </div>
+
             {/* Multi-Agent Toggle */}
             <div className="flex items-center gap-2 mr-4">
               <label className="text-sm text-blue-100">Multi-Agent:</label>
@@ -228,6 +296,22 @@ const ChatBox = () => {
 
       {/* Messages Container - This is the scrollable area */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4 min-h-0">
+        {/* Document Context Indicator */}
+        {selectedDocId && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+            <span className="text-sm text-blue-700">
+              📄 Chat context:{" "}
+              <strong>
+                {availableDocuments.find((doc) => doc.doc_id === selectedDocId)
+                  ?.title ||
+                  availableDocuments.find((doc) => doc.doc_id === selectedDocId)
+                    ?.filename ||
+                  `Document ${selectedDocId.substring(0, 8)}...`}
+              </strong>
+            </span>
+          </div>
+        )}
+
         {messages.length === 0 && (
           <div className="text-center text-gray-500 mt-8">
             <div className="text-6xl mb-4">💭</div>
@@ -236,6 +320,14 @@ const ChatBox = () => {
               Upload documents, ask questions, create study plans, or search for
               resources.
             </p>
+            {!selectedDocId && availableDocuments.length > 0 && (
+              <div className="mt-4 p-4 bg-yellow-50 rounded-lg text-left max-w-md mx-auto border border-yellow-200">
+                <p className="text-sm text-yellow-800">
+                  💡 <strong>Tip:</strong> Select a document above to get
+                  context-specific answers!
+                </p>
+              </div>
+            )}
             {useMultiAgent && (
               <div className="mt-4 p-4 bg-blue-50 rounded-lg text-left max-w-md mx-auto">
                 <h4 className="font-medium text-blue-800 mb-2">
@@ -373,11 +465,23 @@ const ChatBox = () => {
           </button>
         </div>
 
-        {sessionId && (
-          <p className="text-xs text-gray-500 mt-2">
-            Session ID: {sessionId.substring(0, 8)}... | Mode:{" "}
-            {useMultiAgent ? "Multi-Agent" : "Simple RAG"}
-          </p>
+        {(sessionId || selectedDocId) && (
+          <div className="text-xs text-gray-500 mt-2 flex items-center gap-4">
+            {sessionId && (
+              <span>Session ID: {sessionId.substring(0, 8)}...</span>
+            )}
+            <span>Mode: {useMultiAgent ? "Multi-Agent" : "Simple RAG"}</span>
+            {selectedDocId && (
+              <span>
+                Document:{" "}
+                {availableDocuments.find((doc) => doc.doc_id === selectedDocId)
+                  ?.title ||
+                  availableDocuments.find((doc) => doc.doc_id === selectedDocId)
+                    ?.filename ||
+                  `${selectedDocId.substring(0, 8)}...`}
+              </span>
+            )}
+          </div>
         )}
       </div>
     </div>
