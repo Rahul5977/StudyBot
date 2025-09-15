@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UploadForm from "../components/UploadForm";
 import ChatBox from "../components/ChatBox";
 import StepsVisualizer from "../components/StepsVisualizer";
@@ -11,6 +11,26 @@ const Home = () => {
   const [studyPlan, setStudyPlan] = useState(null);
   const [isCreatingPlan, setIsCreatingPlan] = useState(false);
   const [planTopic, setPlanTopic] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Initialize dark mode from localStorage or system preference
+  useEffect(() => {
+    const savedMode = localStorage.getItem("darkMode");
+    const systemPrefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    setDarkMode(savedMode ? JSON.parse(savedMode) : systemPrefersDark);
+  }, []);
+
+  // Apply dark mode to document
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  }, [darkMode]);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
   const handleCreatePlan = async () => {
     if (!planTopic.trim() || isCreatingPlan) return;
@@ -29,31 +49,86 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div
+      className={`min-h-screen transition-colors duration-300 ${
+        darkMode
+          ? "bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900"
+          : "bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"
+      } py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden`}
+    >
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full opacity-10 blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-10 blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-indigo-400 to-blue-400 rounded-full opacity-5 blur-3xl"></div>
+        <div
+          className={`absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br ${
+            darkMode
+              ? "from-blue-600 to-purple-600"
+              : "from-blue-400 to-purple-400"
+          } rounded-full opacity-10 blur-3xl`}
+        ></div>
+        <div
+          className={`absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br ${
+            darkMode
+              ? "from-purple-600 to-pink-600"
+              : "from-purple-400 to-pink-400"
+          } rounded-full opacity-10 blur-3xl`}
+        ></div>
+        <div
+          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br ${
+            darkMode
+              ? "from-indigo-600 to-blue-600"
+              : "from-indigo-400 to-blue-400"
+          } rounded-full opacity-5 blur-3xl`}
+        ></div>
       </div>
 
-      <div className="max-w-6xl mx-auto relative z-10">
-        <div className="text-center mb-12">
-          {/* Logo/Icon */}
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-lg">
-            <svg
-              className="w-10 h-10 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="text-center mb-8">
+          {/* Logo/Icon and Dark Mode Toggle */}
+          <div className="flex justify-between items-start mb-6">
+            <div></div> {/* Spacer */}
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-lg">
+              <svg
+                className="w-10 h-10 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                />
+              </svg>
+            </div>
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className={`p-3 rounded-xl transition-all duration-200 ${
+                darkMode
+                  ? "bg-gray-800 text-yellow-400 hover:bg-gray-700"
+                  : "bg-white/80 text-gray-600 hover:bg-white"
+              } backdrop-blur-sm shadow-lg`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-              />
-            </svg>
+              {darkMode ? (
+                <svg
+                  className="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 18C8.686 18 6 15.314 6 12s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6zm0-10c-2.206 0-4 1.794-4 4s1.794 4 4 4 4-1.794 4-4-1.794-4-4-4z" />
+                  <path d="M12 2l-.707.707L12 3.414l.707-.707L12 2zM12 20.586l-.707.707L12 22l.707-.707L12 20.586zM2 12l.707-.707L3.414 12l-.707.707L2 12zM20.586 12l.707-.707L22 12l-.707.707L20.586 12zM5.636 5.636l-.707.707L5.636 7.05l.707-.707L5.636 5.636zM17.657 17.657l-.707.707L17.657 19.07l.707-.707L17.657 17.657zM5.636 18.364l-.707-.707L5.636 16.95l.707.707L5.636 18.364zM17.657 6.343l-.707-.707L17.657 4.93l.707.707L17.657 6.343z" />
+                </svg>
+              ) : (
+                <svg
+                  className="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05z" />
+                </svg>
+              )}
+            </button>
           </div>
 
           <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
@@ -81,12 +156,20 @@ const Home = () => {
 
         {/* Tab Navigation */}
         <div className="flex justify-center mb-8">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-white/20">
+          <div
+            className={`${
+              darkMode ? "bg-gray-800/80" : "bg-white/80"
+            } backdrop-blur-sm rounded-2xl p-2 shadow-lg border ${
+              darkMode ? "border-gray-700/20" : "border-white/20"
+            }`}
+          >
             <button
               onClick={() => setActiveTab("upload")}
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                 activeTab === "upload"
                   ? "bg-blue-600 text-white shadow-lg"
+                  : darkMode
+                  ? "text-gray-300 hover:text-blue-400"
                   : "text-gray-600 hover:text-blue-600"
               }`}
             >
@@ -97,6 +180,8 @@ const Home = () => {
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                 activeTab === "chat"
                   ? "bg-blue-600 text-white shadow-lg"
+                  : darkMode
+                  ? "text-gray-300 hover:text-blue-400"
                   : "text-gray-600 hover:text-blue-600"
               }`}
             >
@@ -107,6 +192,8 @@ const Home = () => {
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                 activeTab === "plan"
                   ? "bg-blue-600 text-white shadow-lg"
+                  : darkMode
+                  ? "text-gray-300 hover:text-blue-400"
                   : "text-gray-600 hover:text-blue-600"
               }`}
             >
@@ -115,30 +202,56 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Content Area */}
-        <div className="bg-white/80 backdrop-blur-sm shadow-2xl rounded-3xl border border-white/20 overflow-hidden">
+        {/* Content Area - Made bigger and responsive */}
+        <div
+          className={`${
+            darkMode ? "bg-gray-800/80" : "bg-white/80"
+          } backdrop-blur-sm shadow-2xl rounded-3xl border ${
+            darkMode ? "border-gray-700/20" : "border-white/20"
+          } overflow-hidden min-h-[85vh]`}
+        >
           {activeTab === "upload" && (
-            <div className="p-8">
-              <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <div className="p-10">
+              <div className="text-center mb-8">
+                <h2
+                  className={`text-3xl font-bold ${
+                    darkMode ? "text-white" : "text-gray-900"
+                  } mb-3`}
+                >
                   Upload Your Documents
                 </h2>
-                <p className="text-gray-600">
+                <p
+                  className={`text-lg ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
                   Upload PDFs or Excel files to get started with AI-powered
                   analysis
                 </p>
               </div>
-              <UploadForm />
+              <UploadForm darkMode={darkMode} />
             </div>
           )}
 
           {activeTab === "chat" && (
-            <div className="h-[70vh] min-h-[500px] max-h-[800px] flex flex-col">
-              <div className="p-6 border-b border-gray-200 flex-shrink-0">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <div className="h-[85vh] min-h-[700px] flex flex-col">
+              <div
+                className={`p-8 border-b ${
+                  darkMode ? "border-gray-700" : "border-gray-200"
+                } flex-shrink-0`}
+              >
+                <h2
+                  className={`text-3xl font-bold ${
+                    darkMode ? "text-white" : "text-gray-900"
+                  } mb-3`}
+                >
                   Chat with Your Documents
                 </h2>
-                <p className="text-gray-600">
+                <p
+                  className={`text-lg ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
                   Ask questions about your uploaded documents and get
                   intelligent answers
                 </p>
@@ -146,13 +259,22 @@ const Home = () => {
 
               <div className="flex-1 flex min-h-0">
                 <div className="flex-1 min-w-0">
-                  <ChatBox onStepsUpdate={setCurrentSteps} />
+                  <ChatBox
+                    onStepsUpdate={setCurrentSteps}
+                    darkMode={darkMode}
+                  />
                 </div>
 
                 {/* Steps Visualizer Sidebar */}
                 {currentSteps.length > 0 && (
-                  <div className="w-80 border-l border-gray-200 p-4 bg-gray-50 flex-shrink-0 overflow-y-auto">
-                    <StepsVisualizer steps={currentSteps} />
+                  <div
+                    className={`w-80 border-l ${
+                      darkMode
+                        ? "border-gray-700 bg-gray-800"
+                        : "border-gray-200 bg-gray-50"
+                    } p-4 flex-shrink-0 overflow-y-auto`}
+                  >
+                    <StepsVisualizer steps={currentSteps} darkMode={darkMode} />
                   </div>
                 )}
               </div>
@@ -160,12 +282,24 @@ const Home = () => {
           )}
 
           {activeTab === "plan" && (
-            <div className="h-[70vh] min-h-[500px] max-h-[800px] flex flex-col">
-              <div className="p-6 border-b border-gray-200 flex-shrink-0">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <div className="h-[85vh] min-h-[700px] flex flex-col">
+              <div
+                className={`p-8 border-b ${
+                  darkMode ? "border-gray-700" : "border-gray-200"
+                } flex-shrink-0`}
+              >
+                <h2
+                  className={`text-3xl font-bold ${
+                    darkMode ? "text-white" : "text-gray-900"
+                  } mb-3`}
+                >
                   AI-Generated Study Plans
                 </h2>
-                <p className="text-gray-600 mb-4">
+                <p
+                  className={`text-lg ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  } mb-6`}
+                >
                   Create comprehensive study plans for any topic using AI
                 </p>
 
@@ -176,7 +310,11 @@ const Home = () => {
                     placeholder="Enter a topic to create a study plan (e.g., 'Machine Learning', 'React Development')"
                     value={planTopic}
                     onChange={(e) => setPlanTopic(e.target.value)}
-                    className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className={`flex-1 border ${
+                      darkMode
+                        ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400"
+                        : "border-gray-300 bg-white text-gray-900"
+                    } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") handleCreatePlan();
                     }}
@@ -184,7 +322,7 @@ const Home = () => {
                   <button
                     onClick={handleCreatePlan}
                     disabled={!planTopic.trim() || isCreatingPlan}
-                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                    className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-lg"
                   >
                     {isCreatingPlan ? "Creating..." : "Generate Plan"}
                   </button>
@@ -192,33 +330,50 @@ const Home = () => {
 
                 {isCreatingPlan && (
                   <div className="mt-4 flex items-center gap-2 text-blue-600">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                    <span className="text-sm">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                    <span className="text-base">
                       Creating your personalized study plan...
                     </span>
                   </div>
                 )}
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6">
+              <div className="flex-1 overflow-y-auto p-8">
                 {studyPlan ? (
                   <PlanEditor
                     studyPlan={studyPlan}
                     isEditing={true}
                     onPlanUpdate={setStudyPlan}
+                    darkMode={darkMode}
                   />
                 ) : (
-                  <div className="text-center text-gray-500 mt-16">
+                  <div
+                    className={`text-center ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    } mt-16`}
+                  >
                     <div className="text-6xl mb-4">📚</div>
-                    <h3 className="text-xl font-medium mb-2">
+                    <h3
+                      className={`text-xl font-medium mb-2 ${
+                        darkMode ? "text-gray-300" : "text-gray-700"
+                      }`}
+                    >
                       No Study Plan Yet
                     </h3>
-                    <p className="text-gray-400 mb-6">
+                    <p
+                      className={`${
+                        darkMode ? "text-gray-500" : "text-gray-400"
+                      } mb-6`}
+                    >
                       Enter a topic above to generate a comprehensive study plan
                     </p>
 
                     <div className="max-w-md mx-auto">
-                      <h4 className="font-medium text-gray-700 mb-3">
+                      <h4
+                        className={`font-medium ${
+                          darkMode ? "text-gray-300" : "text-gray-700"
+                        } mb-3`}
+                      >
                         💡 Try these examples:
                       </h4>
                       <div className="space-y-2">
@@ -232,7 +387,13 @@ const Home = () => {
                           <button
                             key={index}
                             onClick={() => setPlanTopic(example)}
-                            className="block w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 hover:border-blue-300 transition-colors"
+                            className={`block w-full text-left px-4 py-2 text-sm text-blue-600 hover:${
+                              darkMode ? "bg-gray-700" : "bg-blue-50"
+                            } rounded-lg border ${
+                              darkMode
+                                ? "border-gray-600 hover:border-blue-500"
+                                : "border-blue-200 hover:border-blue-300"
+                            } transition-colors`}
                           >
                             {example}
                           </button>

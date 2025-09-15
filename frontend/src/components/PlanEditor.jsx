@@ -7,7 +7,12 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/outline";
 
-const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
+const PlanEditor = ({
+  studyPlan,
+  onPlanUpdate,
+  isEditing = false,
+  darkMode = false,
+}) => {
   const [plan, setPlan] = useState(studyPlan || null);
   const [expandedSections, setExpandedSections] = useState(new Set());
   const [editingItem, setEditingItem] = useState(null);
@@ -115,7 +120,11 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
             type="text"
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
-            className="flex-1 px-2 py-1 border rounded text-sm"
+            className={`flex-1 px-2 py-1 border rounded text-sm ${
+              darkMode
+                ? "bg-gray-700 border-gray-600 text-white"
+                : "bg-white border-gray-300 text-gray-900"
+            }`}
             placeholder={placeholder}
             autoFocus
             onBlur={saveEdit}
@@ -134,9 +143,15 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
         {isEditing && (
           <button
             onClick={() => startEdit(type, id, value)}
-            className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-100 rounded"
+            className={`opacity-0 group-hover:opacity-100 p-1 rounded ${
+              darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
+            }`}
           >
-            <PencilIcon className="w-3 h-3 text-gray-500" />
+            <PencilIcon
+              className={`w-3 h-3 ${
+                darkMode ? "text-gray-400" : "text-gray-500"
+              }`}
+            />
           </button>
         )}
       </div>
@@ -145,9 +160,23 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
 
   if (!plan) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="text-center text-gray-500">
-          <h3 className="text-lg font-medium mb-2">No Study Plan Available</h3>
+      <div
+        className={`rounded-lg shadow-md p-6 ${
+          darkMode ? "bg-gray-800" : "bg-white"
+        }`}
+      >
+        <div
+          className={`text-center ${
+            darkMode ? "text-gray-400" : "text-gray-500"
+          }`}
+        >
+          <h3
+            className={`text-lg font-medium mb-2 ${
+              darkMode ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
+            No Study Plan Available
+          </h3>
           <p className="text-sm">
             Create a study plan by asking the AI to generate one for you.
           </p>
@@ -157,7 +186,11 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div
+      className={`rounded-lg shadow-md overflow-hidden ${
+        darkMode ? "bg-gray-800" : "bg-white"
+      }`}
+    >
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
         <EditableText
@@ -188,9 +221,21 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
 
       {/* Prerequisites */}
       {plan.prerequisites && plan.prerequisites.length > 0 && (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-          <h4 className="font-medium text-yellow-800 mb-2">📋 Prerequisites</h4>
-          <ul className="text-sm text-yellow-700 space-y-1">
+        <div
+          className={`border-l-4 border-yellow-400 p-4 ${
+            darkMode
+              ? "bg-yellow-900/20 text-yellow-200"
+              : "bg-yellow-50 text-yellow-700"
+          }`}
+        >
+          <h4
+            className={`font-medium mb-2 ${
+              darkMode ? "text-yellow-300" : "text-yellow-800"
+            }`}
+          >
+            📋 Prerequisites
+          </h4>
+          <ul className="text-sm space-y-1">
             {plan.prerequisites.map((prereq, index) => (
               <li key={index} className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
@@ -208,19 +253,33 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
             {plan.sections.map((section, sectionIndex) => (
               <div
                 key={section.id || sectionIndex}
-                className="border rounded-lg overflow-hidden"
+                className={`border rounded-lg overflow-hidden ${
+                  darkMode ? "border-gray-600" : "border-gray-200"
+                }`}
               >
                 {/* Section Header */}
                 <div
-                  className="bg-gray-50 p-4 cursor-pointer hover:bg-gray-100 transition-colors"
+                  className={`p-4 cursor-pointer transition-colors ${
+                    darkMode
+                      ? "bg-gray-700 hover:bg-gray-600"
+                      : "bg-gray-50 hover:bg-gray-100"
+                  }`}
                   onClick={() => toggleSection(section.id)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       {expandedSections.has(section.id) ? (
-                        <ChevronDownIcon className="w-5 h-5 text-gray-500" />
+                        <ChevronDownIcon
+                          className={`w-5 h-5 ${
+                            darkMode ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        />
                       ) : (
-                        <ChevronRightIcon className="w-5 h-5 text-gray-500" />
+                        <ChevronRightIcon
+                          className={`w-5 h-5 ${
+                            darkMode ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        />
                       )}
 
                       <div>
@@ -228,10 +287,16 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
                           type="section_title"
                           id={section.id}
                           value={section.title || `Section ${sectionIndex + 1}`}
-                          className="font-medium text-gray-900"
+                          className={`font-medium ${
+                            darkMode ? "text-gray-100" : "text-gray-900"
+                          }`}
                           placeholder="Enter section title"
                         />
-                        <div className="text-sm text-gray-600 mt-1">
+                        <div
+                          className={`text-sm mt-1 ${
+                            darkMode ? "text-gray-400" : "text-gray-600"
+                          }`}
+                        >
                           ⏱️ {section.duration || "Duration not specified"}
                         </div>
                       </div>
@@ -243,7 +308,9 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
                           e.stopPropagation();
                           addSubsection(section.id);
                         }}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                        className={`p-2 text-blue-600 rounded transition-colors ${
+                          darkMode ? "hover:bg-blue-900/20" : "hover:bg-blue-50"
+                        }`}
                         title="Add subsection"
                       >
                         <PlusIcon className="w-4 h-4" />
@@ -254,12 +321,20 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
 
                 {/* Section Content */}
                 {expandedSections.has(section.id) && (
-                  <div className="p-4 border-t bg-white">
+                  <div
+                    className={`p-4 border-t ${
+                      darkMode
+                        ? "bg-gray-800 border-gray-600"
+                        : "bg-white border-gray-200"
+                    }`}
+                  >
                     <EditableText
                       type="section_description"
                       id={section.id}
                       value={section.description || "No description provided"}
-                      className="text-gray-700 mb-4"
+                      className={`mb-4 ${
+                        darkMode ? "text-gray-300" : "text-gray-700"
+                      }`}
                       placeholder="Enter section description"
                     />
 
@@ -267,10 +342,18 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
                     {section.learning_objectives &&
                       section.learning_objectives.length > 0 && (
                         <div className="mb-4">
-                          <h5 className="font-medium text-gray-900 mb-2">
+                          <h5
+                            className={`font-medium mb-2 ${
+                              darkMode ? "text-gray-200" : "text-gray-900"
+                            }`}
+                          >
                             🎯 Learning Objectives
                           </h5>
-                          <ul className="text-sm text-gray-600 space-y-1 ml-4">
+                          <ul
+                            className={`text-sm space-y-1 ml-4 ${
+                              darkMode ? "text-gray-400" : "text-gray-600"
+                            }`}
+                          >
                             {section.learning_objectives.map(
                               (objective, index) => (
                                 <li
@@ -289,26 +372,46 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
                     {/* Subsections */}
                     {section.subsections && section.subsections.length > 0 && (
                       <div className="space-y-3">
-                        <h5 className="font-medium text-gray-900">
+                        <h5
+                          className={`font-medium ${
+                            darkMode ? "text-gray-200" : "text-gray-900"
+                          }`}
+                        >
                           📚 Subsections
                         </h5>
                         {section.subsections.map((subsection, subIndex) => (
                           <div
                             key={subsection.id || subIndex}
-                            className="bg-gray-50 p-3 rounded border"
+                            className={`p-3 rounded border ${
+                              darkMode
+                                ? "bg-gray-700 border-gray-600"
+                                : "bg-gray-50 border-gray-200"
+                            }`}
                           >
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
-                                <h6 className="font-medium text-gray-800 mb-1">
+                                <h6
+                                  className={`font-medium mb-1 ${
+                                    darkMode ? "text-gray-200" : "text-gray-800"
+                                  }`}
+                                >
                                   {subsection.title ||
                                     `Subsection ${subIndex + 1}`}
                                 </h6>
-                                <p className="text-sm text-gray-600 mb-2">
+                                <p
+                                  className={`text-sm mb-2 ${
+                                    darkMode ? "text-gray-400" : "text-gray-600"
+                                  }`}
+                                >
                                   {subsection.content ||
                                     "No content description"}
                                 </p>
 
-                                <div className="text-xs text-gray-500">
+                                <div
+                                  className={`text-xs ${
+                                    darkMode ? "text-gray-500" : "text-gray-500"
+                                  }`}
+                                >
                                   ⏰{" "}
                                   {subsection.estimated_time ||
                                     "Time not specified"}
@@ -318,10 +421,22 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
                                 {subsection.activities &&
                                   subsection.activities.length > 0 && (
                                     <div className="mt-2">
-                                      <div className="text-xs font-medium text-gray-700 mb-1">
+                                      <div
+                                        className={`text-xs font-medium mb-1 ${
+                                          darkMode
+                                            ? "text-gray-300"
+                                            : "text-gray-700"
+                                        }`}
+                                      >
                                         Activities:
                                       </div>
-                                      <ul className="text-xs text-gray-600 space-y-0.5">
+                                      <ul
+                                        className={`text-xs space-y-0.5 ${
+                                          darkMode
+                                            ? "text-gray-400"
+                                            : "text-gray-600"
+                                        }`}
+                                      >
                                         {subsection.activities.map(
                                           (activity, idx) => (
                                             <li
@@ -341,10 +456,22 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
                                 {subsection.resources &&
                                   subsection.resources.length > 0 && (
                                     <div className="mt-2">
-                                      <div className="text-xs font-medium text-gray-700 mb-1">
+                                      <div
+                                        className={`text-xs font-medium mb-1 ${
+                                          darkMode
+                                            ? "text-gray-300"
+                                            : "text-gray-700"
+                                        }`}
+                                      >
                                         Resources:
                                       </div>
-                                      <ul className="text-xs text-gray-600 space-y-0.5">
+                                      <ul
+                                        className={`text-xs space-y-0.5 ${
+                                          darkMode
+                                            ? "text-gray-400"
+                                            : "text-gray-600"
+                                        }`}
+                                      >
                                         {subsection.resources.map(
                                           (resource, idx) => (
                                             <li
@@ -366,7 +493,11 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
                                   onClick={() =>
                                     removeSubsection(section.id, subsection.id)
                                   }
-                                  className="p-1 text-red-500 hover:bg-red-50 rounded ml-2"
+                                  className={`p-1 text-red-500 rounded ml-2 ${
+                                    darkMode
+                                      ? "hover:bg-red-900/20"
+                                      : "hover:bg-red-50"
+                                  }`}
                                   title="Remove subsection"
                                 >
                                   <TrashIcon className="w-3 h-3" />
@@ -383,7 +514,11 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
             ))}
           </div>
         ) : (
-          <div className="text-center text-gray-500 py-8">
+          <div
+            className={`text-center py-8 ${
+              darkMode ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
             <p>No sections available in this study plan.</p>
           </div>
         )}
@@ -391,11 +526,21 @@ const PlanEditor = ({ studyPlan, onPlanUpdate, isEditing = false }) => {
 
       {/* Final Assessment */}
       {plan.final_assessment && (
-        <div className="bg-green-50 border-l-4 border-green-400 p-4 m-6 rounded">
-          <h4 className="font-medium text-green-800 mb-2">
+        <div
+          className={`border-l-4 border-green-400 p-4 m-6 rounded ${
+            darkMode
+              ? "bg-green-900/20 text-green-200"
+              : "bg-green-50 text-green-700"
+          }`}
+        >
+          <h4
+            className={`font-medium mb-2 ${
+              darkMode ? "text-green-300" : "text-green-800"
+            }`}
+          >
             🏆 Final Assessment
           </h4>
-          <p className="text-sm text-green-700">{plan.final_assessment}</p>
+          <p className="text-sm">{plan.final_assessment}</p>
         </div>
       )}
     </div>

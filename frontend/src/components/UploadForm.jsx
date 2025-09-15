@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const UploadForm = () => {
+const UploadForm = ({ darkMode = false }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadResponse, setUploadResponse] = useState(null);
@@ -75,7 +75,9 @@ const UploadForm = () => {
         <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
           Upload Your Documents
         </h2>
-        <p className="text-gray-600 text-lg">
+        <p
+          className={`text-lg ${darkMode ? "text-gray-300" : "text-gray-600"}`}
+        >
           Support for PDF and Excel files (.pdf, .xlsx, .xls)
         </p>
       </div>
@@ -83,7 +85,13 @@ const UploadForm = () => {
       {/* Upload Area */}
       <div className="relative group">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-        <div className="relative border-2 border-dashed border-gray-300 group-hover:border-blue-400 rounded-2xl p-12 text-center bg-white/50 backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
+        <div
+          className={`relative border-2 border-dashed group-hover:border-blue-400 rounded-2xl p-12 text-center backdrop-blur-sm transition-all duration-300 hover:shadow-xl ${
+            darkMode
+              ? "border-gray-600 bg-gray-800/50"
+              : "border-gray-300 bg-white/50"
+          }`}
+        >
           <input
             type="file"
             accept=".pdf,.xlsx,.xls"
@@ -129,7 +137,11 @@ const UploadForm = () => {
                   </svg>
                   Choose File
                 </label>
-                <p className="mt-2 text-gray-500">
+                <p
+                  className={`mt-2 ${
+                    darkMode ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
                   or drag and drop your file here
                 </p>
               </div>
@@ -151,11 +163,25 @@ const UploadForm = () => {
                   />
                 </svg>
               </div>
-              <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-gray-200">
-                <p className="text-lg font-medium text-gray-900 mb-2">
+              <div
+                className={`backdrop-blur-sm rounded-xl p-4 border ${
+                  darkMode
+                    ? "bg-gray-700/70 border-gray-600"
+                    : "bg-white/70 border-gray-200"
+                }`}
+              >
+                <p
+                  className={`text-lg font-medium mb-2 ${
+                    darkMode ? "text-gray-100" : "text-gray-900"
+                  }`}
+                >
                   {selectedFile.name}
                 </p>
-                <div className="flex items-center justify-center space-x-4 text-sm text-gray-600">
+                <div
+                  className={`flex items-center justify-center space-x-4 text-sm ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
                   <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
                     {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                   </span>
@@ -223,7 +249,11 @@ const UploadForm = () => {
 
           <button
             onClick={resetForm}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition hover:scale-105 shadow-sm"
+            className={`flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition hover:scale-105 shadow-sm ${
+              darkMode
+                ? "border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600"
+                : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+            }`}
           >
             <svg
               className="w-5 h-5 mr-2"
@@ -247,7 +277,13 @@ const UploadForm = () => {
       {uploadResponse && (
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-2xl blur opacity-25"></div>
-          <div className="relative bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-2xl p-6 shadow-lg">
+          <div
+            className={`relative border rounded-2xl p-6 shadow-lg ${
+              darkMode
+                ? "bg-gradient-to-r from-green-900/20 to-blue-900/20 border-green-700"
+                : "bg-gradient-to-r from-green-50 to-blue-50 border-green-200"
+            }`}
+          >
             <div className="flex items-start">
               <div className="flex-shrink-0">
                 <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center">
@@ -267,33 +303,95 @@ const UploadForm = () => {
                 </div>
               </div>
               <div className="ml-4 flex-1">
-                <h3 className="text-xl font-bold text-green-800 mb-3">
+                <h3
+                  className={`text-xl font-bold mb-3 ${
+                    darkMode ? "text-green-300" : "text-green-800"
+                  }`}
+                >
                   Upload Successful! 🎉
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                  <div className="bg-white/70 backdrop-blur-sm rounded-lg p-3 border border-green-200">
-                    <p className="font-medium text-green-800">File Name</p>
-                    <p className="text-green-700">{uploadResponse.filename}</p>
+                  <div
+                    className={`backdrop-blur-sm rounded-lg p-3 border ${
+                      darkMode
+                        ? "bg-gray-800/70 border-green-700"
+                        : "bg-white/70 border-green-200"
+                    }`}
+                  >
+                    <p
+                      className={`font-medium ${
+                        darkMode ? "text-green-300" : "text-green-800"
+                      }`}
+                    >
+                      File Name
+                    </p>
+                    <p
+                      className={darkMode ? "text-green-200" : "text-green-700"}
+                    >
+                      {uploadResponse.filename}
+                    </p>
                   </div>
                   {uploadResponse.total_pages && (
-                    <div className="bg-white/70 backdrop-blur-sm rounded-lg p-3 border border-green-200">
-                      <p className="font-medium text-green-800">Total Pages</p>
-                      <p className="text-green-700">
+                    <div
+                      className={`backdrop-blur-sm rounded-lg p-3 border ${
+                        darkMode
+                          ? "bg-gray-800/70 border-green-700"
+                          : "bg-white/70 border-green-200"
+                      }`}
+                    >
+                      <p
+                        className={`font-medium ${
+                          darkMode ? "text-green-300" : "text-green-800"
+                        }`}
+                      >
+                        Total Pages
+                      </p>
+                      <p
+                        className={
+                          darkMode ? "text-green-200" : "text-green-700"
+                        }
+                      >
                         {uploadResponse.total_pages}
                       </p>
                     </div>
                   )}
                   {uploadResponse.total_sheets && (
-                    <div className="bg-white/70 backdrop-blur-sm rounded-lg p-3 border border-green-200">
-                      <p className="font-medium text-green-800">Total Sheets</p>
-                      <p className="text-green-700">
+                    <div
+                      className={`backdrop-blur-sm rounded-lg p-3 border ${
+                        darkMode
+                          ? "bg-gray-800/70 border-green-700"
+                          : "bg-white/70 border-green-200"
+                      }`}
+                    >
+                      <p
+                        className={`font-medium ${
+                          darkMode ? "text-green-300" : "text-green-800"
+                        }`}
+                      >
+                        Total Sheets
+                      </p>
+                      <p
+                        className={
+                          darkMode ? "text-green-200" : "text-green-700"
+                        }
+                      >
                         {uploadResponse.total_sheets}
                       </p>
                     </div>
                   )}
                 </div>
-                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-700 flex items-center">
+                <div
+                  className={`mt-4 p-3 border rounded-lg ${
+                    darkMode
+                      ? "bg-blue-900/20 border-blue-700"
+                      : "bg-blue-50 border-blue-200"
+                  }`}
+                >
+                  <p
+                    className={`text-sm flex items-center ${
+                      darkMode ? "text-blue-300" : "text-blue-700"
+                    }`}
+                  >
                     <svg
                       className="w-4 h-4 mr-2"
                       fill="none"

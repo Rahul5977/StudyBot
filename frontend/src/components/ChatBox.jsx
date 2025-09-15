@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { chatWithAI, listDocuments } from "../utils/api";
 import PlanEditor from "./PlanEditor";
 
-const ChatBox = () => {
+const ChatBox = ({ onStepsUpdate, darkMode = false }) => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -12,6 +12,7 @@ const ChatBox = () => {
   const [availableDocuments, setAvailableDocuments] = useState([]);
   const [loadingDocs, setLoadingDocs] = useState(false);
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   useEffect(() => {
     loadDocuments();
@@ -42,6 +43,13 @@ const ChatBox = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Enhanced auto-scroll - also scroll when loading state changes
+  useEffect(() => {
+    if (isLoading) {
+      setTimeout(() => scrollToBottom(), 100);
+    }
+  }, [isLoading]);
 
   const handleClearChat = () => {
     setMessages([]);
@@ -109,24 +117,44 @@ const ChatBox = () => {
     if (!chunks || chunks.length === 0) return null;
 
     return (
-      <div className="mt-3 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400 max-h-40 overflow-y-auto">
-        <p className="text-sm font-medium text-blue-800 mb-2">
+      <div
+        className={`mt-3 p-3 rounded-lg border-l-4 border-blue-400 max-h-40 overflow-y-auto ${
+          darkMode ? "bg-blue-900/20 text-blue-200" : "bg-blue-50 text-blue-800"
+        }`}
+      >
+        <p
+          className={`text-sm font-medium mb-2 ${
+            darkMode ? "text-blue-300" : "text-blue-800"
+          }`}
+        >
           📚 Sources ({chunks.length} relevant chunks):
         </p>
         <div className="space-y-2 max-h-32 overflow-y-auto">
           {chunks.map((chunk, index) => (
             <div
               key={index}
-              className="text-xs text-blue-700 p-2 bg-white rounded border"
+              className={`text-xs p-2 rounded border ${
+                darkMode
+                  ? "text-blue-300 bg-gray-800 border-gray-600"
+                  : "text-blue-700 bg-white border-gray-200"
+              }`}
             >
               <div className="font-medium mb-1">
                 📄 {chunk.metadata?.source_file || chunk.filename || "Unknown"}
                 {chunk.page && ` - Page ${chunk.page}`}
-                <span className="ml-2 text-blue-600">
+                <span
+                  className={`ml-2 ${
+                    darkMode ? "text-blue-400" : "text-blue-600"
+                  }`}
+                >
                   (Score: {(chunk.score * 100).toFixed(1)}%)
                 </span>
               </div>
-              <div className="text-gray-600 line-clamp-2">
+              <div
+                className={`line-clamp-2 ${
+                  darkMode ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
                 {chunk.text.length > 150
                   ? `${chunk.text.substring(0, 150)}...`
                   : chunk.text}
@@ -142,38 +170,68 @@ const ChatBox = () => {
     if (!searchResults || searchResults.length === 0) return null;
 
     return (
-      <div className="mt-3 p-3 bg-green-50 rounded-lg border-l-4 border-green-400">
-        <p className="text-sm font-medium text-green-800 mb-2">
+      <div
+        className={`mt-3 p-3 rounded-lg border-l-4 border-green-400 ${
+          darkMode
+            ? "bg-green-900/20 text-green-200"
+            : "bg-green-50 text-green-800"
+        }`}
+      >
+        <p
+          className={`text-sm font-medium mb-2 ${
+            darkMode ? "text-green-300" : "text-green-800"
+          }`}
+        >
           🌐 Web Search Results ({searchResults.length} found):
         </p>
         <div className="space-y-2 max-h-48 overflow-y-auto">
           {searchResults.slice(0, 3).map((result, index) => (
             <div
               key={index}
-              className="text-xs text-green-700 p-2 bg-white rounded border"
+              className={`text-xs p-2 rounded border ${
+                darkMode
+                  ? "text-green-300 bg-gray-800 border-gray-600"
+                  : "text-green-700 bg-white border-gray-200"
+              }`}
             >
               <div className="font-medium mb-1">
                 <a
                   href={result.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-700 hover:text-green-900 hover:underline"
+                  className={`hover:underline ${
+                    darkMode
+                      ? "text-green-300 hover:text-green-100"
+                      : "text-green-700 hover:text-green-900"
+                  }`}
                 >
                   {result.title || "Web Result"}
                 </a>
                 {result.published_date && (
-                  <span className="ml-2 text-green-600 text-xs">
+                  <span
+                    className={`ml-2 text-xs ${
+                      darkMode ? "text-green-400" : "text-green-600"
+                    }`}
+                  >
                     📅 {new Date(result.published_date).toLocaleDateString()}
                   </span>
                 )}
               </div>
-              <div className="text-gray-600 line-clamp-3">
+              <div
+                className={`line-clamp-3 ${
+                  darkMode ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
                 {result.content.length > 200
                   ? `${result.content.substring(0, 200)}...`
                   : result.content}
               </div>
               {result.score && (
-                <div className="text-green-600 text-xs mt-1">
+                <div
+                  className={`text-xs mt-1 ${
+                    darkMode ? "text-green-400" : "text-green-600"
+                  }`}
+                >
                   Relevance: {(result.score * 100).toFixed(1)}%
                 </div>
               )}
@@ -188,17 +246,33 @@ const ChatBox = () => {
     if (!steps || steps.length === 0) return null;
 
     return (
-      <div className="mt-3 p-3 bg-purple-50 rounded-lg border-l-4 border-purple-400">
-        <p className="text-sm font-medium text-purple-800 mb-2">
+      <div
+        className={`mt-3 p-3 rounded-lg border-l-4 border-purple-400 ${
+          darkMode
+            ? "bg-purple-900/20 text-purple-200"
+            : "bg-purple-50 text-purple-800"
+        }`}
+      >
+        <p
+          className={`text-sm font-medium mb-2 ${
+            darkMode ? "text-purple-300" : "text-purple-800"
+          }`}
+        >
           🔧 Agent Steps ({steps.length}):
         </p>
         <div className="space-y-1 max-h-32 overflow-y-auto">
           {steps.map((step, index) => (
             <div
               key={index}
-              className="text-xs text-purple-700 flex items-center gap-2"
+              className={`text-xs flex items-center gap-2 ${
+                darkMode ? "text-purple-300" : "text-purple-700"
+              }`}
             >
-              <span className="w-1.5 h-1.5 bg-purple-500 rounded-full flex-shrink-0"></span>
+              <span
+                className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                  darkMode ? "bg-purple-400" : "bg-purple-500"
+                }`}
+              ></span>
               <span className="font-medium">{step.step}:</span>
               <span>{step.result}</span>
             </div>
@@ -209,7 +283,11 @@ const ChatBox = () => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div
+      className={`h-full flex flex-col ${
+        darkMode ? "bg-gray-800" : "bg-white"
+      }`}
+    >
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 flex-shrink-0">
         <div className="flex items-center justify-between">
@@ -295,11 +373,20 @@ const ChatBox = () => {
       </div>
 
       {/* Messages Container - This is the scrollable area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 min-h-0">
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto p-6 space-y-4 min-h-0"
+      >
         {/* Document Context Indicator */}
         {selectedDocId && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
-            <span className="text-sm text-blue-700">
+          <div
+            className={`border rounded-lg p-3 text-center ${
+              darkMode
+                ? "bg-blue-900/20 border-blue-700 text-blue-200"
+                : "bg-blue-50 border-blue-200 text-blue-700"
+            }`}
+          >
+            <span className="text-sm">
               📄 Chat context:{" "}
               <strong>
                 {availableDocuments.find((doc) => doc.doc_id === selectedDocId)
@@ -313,7 +400,11 @@ const ChatBox = () => {
         )}
 
         {messages.length === 0 && (
-          <div className="text-center text-gray-500 mt-8">
+          <div
+            className={`text-center mt-8 ${
+              darkMode ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
             <div className="text-6xl mb-4">💭</div>
             <p className="text-lg">Start a conversation!</p>
             <p className="text-sm mt-2">
@@ -321,19 +412,35 @@ const ChatBox = () => {
               resources.
             </p>
             {!selectedDocId && availableDocuments.length > 0 && (
-              <div className="mt-4 p-4 bg-yellow-50 rounded-lg text-left max-w-md mx-auto border border-yellow-200">
-                <p className="text-sm text-yellow-800">
+              <div
+                className={`mt-4 p-4 rounded-lg text-left max-w-md mx-auto border ${
+                  darkMode
+                    ? "bg-yellow-900/20 border-yellow-700 text-yellow-200"
+                    : "bg-yellow-50 border-yellow-200 text-yellow-800"
+                }`}
+              >
+                <p className="text-sm">
                   💡 <strong>Tip:</strong> Select a document above to get
                   context-specific answers!
                 </p>
               </div>
             )}
             {useMultiAgent && (
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg text-left max-w-md mx-auto">
-                <h4 className="font-medium text-blue-800 mb-2">
+              <div
+                className={`mt-4 p-4 rounded-lg text-left max-w-md mx-auto ${
+                  darkMode
+                    ? "bg-blue-900/20 text-blue-200"
+                    : "bg-blue-50 text-blue-700"
+                }`}
+              >
+                <h4
+                  className={`font-medium mb-2 ${
+                    darkMode ? "text-blue-300" : "text-blue-800"
+                  }`}
+                >
                   💡 Try these commands:
                 </h4>
-                <ul className="text-sm text-blue-700 space-y-1">
+                <ul className="text-sm space-y-1">
                   <li>• "Create a study plan for machine learning"</li>
                   <li>• "Find resources about Python programming"</li>
                   <li>• "What does this document say about..."</li>
@@ -356,7 +463,11 @@ const ChatBox = () => {
                 message.type === "user"
                   ? "bg-blue-600 text-white ml-8"
                   : message.type === "error"
-                  ? "bg-red-100 text-red-800 mr-8"
+                  ? darkMode
+                    ? "bg-red-900/30 text-red-300 mr-8"
+                    : "bg-red-100 text-red-800 mr-8"
+                  : darkMode
+                  ? "bg-gray-700 text-gray-100 mr-8"
                   : "bg-gray-100 text-gray-800 mr-8"
               }`}
             >
@@ -368,11 +479,21 @@ const ChatBox = () => {
 
               {message.type === "ai" && (
                 <div className="flex items-center mb-2">
-                  <span className="text-sm font-medium text-blue-600">
+                  <span
+                    className={`text-sm font-medium ${
+                      darkMode ? "text-blue-400" : "text-blue-600"
+                    }`}
+                  >
                     🤖 StudyBuddy
                   </span>
                   {message.intent && (
-                    <span className="ml-2 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                    <span
+                      className={`ml-2 text-xs px-2 py-1 rounded ${
+                        darkMode
+                          ? "bg-blue-800 text-blue-200"
+                          : "bg-blue-100 text-blue-700"
+                      }`}
+                    >
                       {message.intent}
                     </span>
                   )}
@@ -386,7 +507,11 @@ const ChatBox = () => {
               {/* Study Plan Display */}
               {message.type === "ai" && message.studyPlan && (
                 <div className="mt-4">
-                  <PlanEditor studyPlan={message.studyPlan} isEditing={false} />
+                  <PlanEditor
+                    studyPlan={message.studyPlan}
+                    isEditing={false}
+                    darkMode={darkMode}
+                  />
                 </div>
               )}
 
@@ -406,13 +531,27 @@ const ChatBox = () => {
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 rounded-lg px-4 py-3 max-w-3xl mr-8">
+            <div
+              className={`rounded-lg px-4 py-3 max-w-3xl mr-8 ${
+                darkMode ? "bg-gray-700" : "bg-gray-100"
+              }`}
+            >
               <div className="flex items-center mb-2">
-                <span className="text-sm font-medium text-blue-600">
+                <span
+                  className={`text-sm font-medium ${
+                    darkMode ? "text-blue-400" : "text-blue-600"
+                  }`}
+                >
                   🤖 StudyBuddy
                 </span>
                 {useMultiAgent && (
-                  <span className="ml-2 text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                  <span
+                    className={`ml-2 text-xs px-2 py-1 rounded ${
+                      darkMode
+                        ? "bg-purple-800 text-purple-200"
+                        : "bg-purple-100 text-purple-700"
+                    }`}
+                  >
                     Multi-Agent Processing
                   </span>
                 )}
@@ -429,7 +568,11 @@ const ChatBox = () => {
                     style={{ animationDelay: "0.2s" }}
                   ></div>
                 </div>
-                <span className="text-gray-500 text-sm">
+                <span
+                  className={`text-sm ${
+                    darkMode ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
                   {useMultiAgent ? "Orchestrating agents..." : "Thinking..."}
                 </span>
               </div>
@@ -441,7 +584,11 @@ const ChatBox = () => {
       </div>
 
       {/* Input - Fixed at bottom */}
-      <div className="border-t p-4 flex-shrink-0 bg-white">
+      <div
+        className={`border-t p-4 flex-shrink-0 ${
+          darkMode ? "bg-gray-800 border-gray-600" : "bg-white border-gray-200"
+        }`}
+      >
         <div className="flex space-x-3">
           <textarea
             value={inputValue}
@@ -452,7 +599,11 @@ const ChatBox = () => {
                 ? "Ask questions, create study plans, or search for resources..."
                 : "Ask a question about your documents..."
             }
-            className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none max-h-32"
+            className={`flex-1 border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none max-h-32 ${
+              darkMode
+                ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+            }`}
             rows="2"
             disabled={isLoading}
           />
@@ -466,7 +617,11 @@ const ChatBox = () => {
         </div>
 
         {(sessionId || selectedDocId) && (
-          <div className="text-xs text-gray-500 mt-2 flex items-center gap-4">
+          <div
+            className={`text-xs mt-2 flex items-center gap-4 ${
+              darkMode ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
             {sessionId && (
               <span>Session ID: {sessionId.substring(0, 8)}...</span>
             )}
