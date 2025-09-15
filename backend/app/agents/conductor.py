@@ -76,6 +76,19 @@ class ConductorAgent:
         """Analyze user intent from the query"""
         try:
             user_query = state.get("user_query", "")
+            doc_id = state.get("doc_id")
+            
+            # If a specific document is selected, prioritize document-based chat
+            if doc_id:
+                intent = "chat"
+                state["intent"] = intent
+                state["step_log"].append({
+                    "step": "analyze_intent",
+                    "result": f"Forced intent to 'chat' due to document selection: {intent}",
+                    "details": {"query": user_query, "intent": intent, "doc_id": doc_id}
+                })
+                logger.info(f"Forced intent to 'chat' for document-specific query: {user_query} (doc_id: {doc_id})")
+                return state
             
             system_prompt = """Analyze the user's query and determine their intent. Respond with one of:
 - "plan": User wants to create or modify a study plan
@@ -129,15 +142,17 @@ Respond with only the intent category."""
         """Retrieve relevant context from documents"""
         try:
             user_query = state.get("user_query", "")
+            doc_id = state.get("doc_id")  # Get doc_id filter from state
             
-            # Use RAG to get relevant chunks
-            import asyncio
-            if asyncio.iscoroutinefunction(self.rag.process_query):
-                result = await self.rag.process_query(user_query)
-            else:
-                result = self.rag.process_query(user_query)
+            logger.info(f"Conductor retrieving context for query: '{user_query}' with doc_id: {doc_id}")
             
-            if result["success"] and result["context_chunks"]:
+            # Use RAG to get relevant chunks with document filtering
+            result = await self.rag.process_query(user_query, session_id="conductor", doc_id=doc_id)
+            
+            logger.info(f"RAG pipeline returned: {len(result.get('context_chunks', []))} chunks")
+            
+            # The simple RAG pipeline returns the response directly, not wrapped in a success dict
+            if result.get("context_chunks"):
                 state["context_chunks"] = result["context_chunks"]
                 state["step_log"].append({
                     "step": "retrieve_context",
@@ -149,7 +164,7 @@ Respond with only the intent category."""
                 state["step_log"].append({
                     "step": "retrieve_context",
                     "result": "No relevant context found in documents",
-                    "details": {"reason": result.get("error", "No documents")}
+                    "details": {"reason": "No context chunks returned"}
                 })
             
             return state
@@ -157,6 +172,11 @@ Respond with only the intent category."""
         except Exception as e:
             logger.error(f"Error retrieving context: {str(e)}")
             state["context_chunks"] = []
+            state["step_log"].append({
+                "step": "retrieve_context",
+                "result": f"Error: {str(e)}",
+                "details": {"error": str(e)}
+            })
             return state
 
     def _web_search(self, state: Dict) -> Dict:
@@ -245,7 +265,10 @@ Respond with only the intent category."""
             # Build context for response generation
             context_text = ""
             if context_chunks:
-                context_text += "\n\nRelevant information from your documents:\n" + "\n---\n".join(context_chunks[:3])
+                context_text += "\n\nRelevant information from your documents:\n"
+                for i, chunk in enumerate(context_chunks[:3]):
+                    page_info = f"[Page {chunk.get('page', 'N/A')}]" if chunk.get('page') else ""
+                    context_text += f"---\n{page_info}\n{chunk.get('text', '')}\n"
             
             if search_results:
                 context_text += "\n\nWeb search results:\n"
@@ -352,12 +375,13 @@ I'm here to help you with your studies! Here's what I can do:
 
 Just ask me anything, and I'll do my best to help you learn effectively!"""
 
-    async def process_query(self, user_query: str) -> Dict[str, Any]:
+    async def process_query(self, user_query: str, doc_id: Optional[str] = None) -> Dict[str, Any]:
         """
         Process a user query through the multi-agent workflow
         
         Args:
             user_query: The user's question or request
+            doc_id: Optional document ID to filter search to specific document
             
         Returns:
             Complete response with steps and final answer
@@ -366,6 +390,7 @@ Just ask me anything, and I'll do my best to help you learn effectively!"""
             # Initialize state
             initial_state = {
                 "user_query": user_query,
+                "doc_id": doc_id,  # Add doc_id to state for filtering
                 "intent": "",
                 "context_chunks": [],
                 "search_results": [],
