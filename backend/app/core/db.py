@@ -16,7 +16,7 @@ class QdrantDB:
         self.client = QdrantClient(host=host, port=port)
         self.collection_name = collection_name
         self.vector_size = 1536  # OpenAI ada-002 embedding size
-        self._ensure_collection()
+        self._collection_initialized = False
     
     def _ensure_collection(self):
         """Create collection if it doesn't exist"""
@@ -35,9 +35,18 @@ class QdrantDB:
                 logger.info(f"Created collection: {self.collection_name}")
             else:
                 logger.info(f"Collection {self.collection_name} already exists")
+            
+            self._collection_initialized = True
         except Exception as e:
             logger.error(f"Error ensuring collection: {e}")
-            raise
+            self._collection_initialized = False
+            # Don't raise here to allow the app to start
+    
+    def _check_and_init_collection(self):
+        """Check if collection is initialized and try to initialize if not"""
+        if not self._collection_initialized:
+            self._ensure_collection()
+        return self._collection_initialized
     
     def add_chunks(self, chunks: List[Dict[str, Any]], embeddings: List[List[float]], doc_id: str):
         """
@@ -48,6 +57,10 @@ class QdrantDB:
             embeddings: List of embedding vectors
             doc_id: Document identifier
         """
+        if not self._check_and_init_collection():
+            logger.error("Cannot add chunks: Collection not available")
+            return False
+            
         try:
             points = []
             for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
@@ -92,6 +105,10 @@ class QdrantDB:
         Returns:
             List of matching chunks with metadata
         """
+        if not self._check_and_init_collection():
+            logger.error("Cannot query chunks: Collection not available")
+            return []
+            
         try:
             query_filter = None
             if doc_id:
@@ -135,6 +152,10 @@ class QdrantDB:
     
     def delete_document(self, doc_id: str):
         """Delete all chunks for a document"""
+        if not self._check_and_init_collection():
+            logger.error("Cannot delete document: Collection not available")
+            return False
+            
         try:
             self.client.delete(
                 collection_name=self.collection_name,
@@ -156,4 +177,4 @@ class QdrantDB:
             raise
 
 # Global instance
-qdrant_db = QdrantDB()
+qdrant_db = QdrantDB(host="qdrant", port=6333, collection_name="studybuddy_docs")

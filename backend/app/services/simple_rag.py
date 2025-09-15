@@ -57,13 +57,14 @@ Answer:"""
         
         return prompt
     
-    async def process_query(self, query: str, session_id: str = "default") -> Dict[str, Any]:
+    async def process_query(self, query: str, session_id: str = "default", doc_id: Optional[str] = None) -> Dict[str, Any]:
         """
         Process a query through the simplified RAG pipeline
         
         Args:
             query: User's question
             session_id: Session identifier
+            doc_id: Optional document ID to filter search to specific document
             
         Returns:
             Dictionary with response and metadata
@@ -86,9 +87,10 @@ Answer:"""
             
             query_embedding = self.embeddings_service.embed_query(query)
             
-            # Search vector store
+            # Search vector store (filter by doc_id if provided)
             context_chunks = qdrant_db.query_chunks(
                 query_embedding=query_embedding,
+                doc_id=doc_id,  # This will filter to specific document if provided
                 top_k=settings.max_context_chunks
             )
             

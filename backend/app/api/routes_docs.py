@@ -340,3 +340,51 @@ async def get_document_status(doc_id: str):
             status_code=500,
             detail=f"Error checking document status: {str(e)}"
         )
+
+@router.get("/documents")
+async def list_documents():
+    """
+    Get list of all available documents
+    
+    Returns:
+        List of documents with their IDs and metadata
+    """
+    try:
+        # Query Qdrant to get unique document IDs
+        # We'll get a sample of points and extract unique doc_ids
+        from qdrant_client.http import models
+        
+        result = qdrant_db.client.scroll(
+            collection_name=qdrant_db.collection_name,
+            limit=1000,  # Get up to 1000 points to find unique docs
+            with_payload=True,
+            with_vectors=False
+        )
+        
+        # Extract unique documents
+        documents = {}
+        for point in result[0]:  # result is (points, next_page_offset)
+            doc_id = point.payload.get("doc_id")
+            if doc_id and doc_id not in documents:
+                # Get filename from payload (added by background task) or metadata or use doc_id
+                filename = point.payload.get("filename") or point.payload.get("metadata", {}).get("source_file") or doc_id
+                metadata = point.payload.get("metadata", {})
+                
+                documents[doc_id] = {
+                    "doc_id": doc_id,
+                    "filename": filename,
+                    "metadata": metadata
+                }
+        
+        return {
+            "success": True,
+            "documents": list(documents.values()),
+            "total": len(documents)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error listing documents: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error listing documents: {str(e)}"
+        )

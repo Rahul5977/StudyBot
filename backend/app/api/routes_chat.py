@@ -20,6 +20,7 @@ class ChatRequest(BaseModel):
     query: str
     session_id: Optional[str] = None
     use_multi_agent: bool = True
+    doc_id: Optional[str] = None  # Filter to specific document
 
 class ChatResponse(BaseModel):
     response: str
@@ -48,7 +49,7 @@ async def chat(request: ChatRequest) -> ChatResponse:
         if request.use_multi_agent:
             # Use multi-agent orchestration
             conductor = ConductorAgent()
-            result = await conductor.process_query(request.query)
+            result = await conductor.process_query(request.query, doc_id=request.doc_id)
             
             if result["success"]:
                 # Log interaction
@@ -78,7 +79,8 @@ async def chat(request: ChatRequest) -> ChatResponse:
             # Use simplified RAG pipeline (legacy)
             result = await simple_rag_pipeline.process_query(
                 query=request.query,
-                session_id=session_id
+                session_id=session_id,
+                doc_id=request.doc_id
             )
             
             return ChatResponse(
