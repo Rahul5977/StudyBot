@@ -364,7 +364,7 @@ const Home = () => {
 
             <div className="flex items-center justify-center space-x-6 mb-6">
               <a
-                href="https://github.com/rahulraj"
+                href="https://github.com/Rahul5977/StudyBot"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors"
@@ -380,7 +380,7 @@ const Home = () => {
               </a>
 
               <div className="text-sm text-gray-500">
-                <p>StudyBuddy AI © 2024</p>
+                <p>StudyBuddy AI © 2025</p>
                 <p>Powered by OpenAI • LangChain • React</p>
               </div>
             </div>
