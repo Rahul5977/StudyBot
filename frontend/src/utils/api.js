@@ -37,7 +37,8 @@ export const uploadExcel = async (file) => {
 export const chatWithAI = async (
   query,
   sessionId = null,
-  useMultiAgent = true
+  useMultiAgent = true,
+  docId = null
 ) => {
   const response = await fetch(`${API_BASE_URL}/chat`, {
     method: "POST",
@@ -48,6 +49,7 @@ export const chatWithAI = async (
       query,
       session_id: sessionId,
       use_multi_agent: useMultiAgent,
+      doc_id: docId,
     }),
   });
 
@@ -159,6 +161,21 @@ export const getPlanTemplate = async (difficulty = "intermediate") => {
 
   if (!response.ok) {
     throw new Error(`Failed to get plan template: ${response.statusText}`);
+  }
+
+  return response.json();
+};
+
+export const listDocuments = async () => {
+  const response = await fetch(`${API_BASE_URL}/documents`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch documents: ${response.statusText}`);
   }
 
   return response.json();
