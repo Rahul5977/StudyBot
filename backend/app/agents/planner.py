@@ -18,23 +18,39 @@ class PlannerAgent:
             openai_api_key=settings.openai_api_key
         )
 
-    def create_study_plan(self, topic: str, context_chunks: List[str] = None, user_preferences: Dict = None) -> Dict[str, Any]:
+    def create_study_plan(self, topic: str, context_chunks: List[Dict[str, Any]] = None, user_preferences: Dict = None) -> Dict[str, Any]:
         """
         Create a structured study plan for the given topic
         
         Args:
             topic: The main topic/subject to create a plan for
-            context_chunks: Relevant document chunks for additional context
+            context_chunks: Relevant document chunks with metadata for additional context
             user_preferences: User preferences like difficulty, duration, style
             
         Returns:
-            Structured study plan with sections, subsections, and learning objectives
+            Structured study plan with sections, subsections, learning objectives, and source provenance
         """
         try:
-            # Build context from chunks
+            # Build context from chunks with source information
             context_text = ""
+            source_pages = []
+            
             if context_chunks:
-                context_text = "\n\nRelevant context from documents:\n" + "\n---\n".join(context_chunks[:3])
+                context_parts = []
+                for chunk in context_chunks[:3]:  # Use top 3 chunks
+                    filename = chunk.get('filename', 'Unknown')
+                    page = chunk.get('page', 'N/A')
+                    text = chunk.get('text', '')
+                    
+                    source_pages.append({
+                        "filename": filename,
+                        "page": page,
+                        "section": chunk.get('section_title', '')
+                    })
+                    
+                    context_parts.append(f"[From {filename}, Page {page}]\n{text}")
+                
+                context_text = "\n\nRelevant context from documents:\n" + "\n---\n".join(context_parts)
             
             # Build user preferences text
             prefs_text = ""
@@ -47,6 +63,7 @@ class PlannerAgent:
 3. Include specific learning objectives
 4. Suggest practical exercises and assessments
 5. Provide estimated time requirements
+6. Reference source materials when available
 
 Format your response as a JSON object with this structure:
 {
@@ -54,6 +71,7 @@ Format your response as a JSON object with this structure:
     "overview": "Brief overview of the plan",
     "duration": "Estimated duration (e.g., '4 weeks', '2 months')",
     "difficulty": "Beginner/Intermediate/Advanced",
+    "source_references": ["Page references from provided context"],
     "sections": [
         {
             "id": "section_1",
@@ -61,6 +79,7 @@ Format your response as a JSON object with this structure:
             "description": "What this section covers",
             "duration": "Estimated time",
             "learning_objectives": ["Objective 1", "Objective 2"],
+            "source_pages": ["Relevant page references"],
             "subsections": [
                 {
                     "id": "subsection_1_1",
@@ -68,7 +87,8 @@ Format your response as a JSON object with this structure:
                     "content": "Detailed content description",
                     "activities": ["Activity 1", "Activity 2"],
                     "resources": ["Resource 1", "Resource 2"],
-                    "estimated_time": "X hours"
+                    "estimated_time": "X hours",
+                    "source_reference": "Page reference if applicable"
                 }
             ]
         }
@@ -79,7 +99,8 @@ Format your response as a JSON object with this structure:
 
             user_prompt = f"""Create a detailed study plan for: {topic}
             
-Make sure the plan is comprehensive, well-structured, and suitable for self-study.{context_text}{prefs_text}"""
+Make sure the plan is comprehensive, well-structured, and suitable for self-study.
+When referencing information from the provided context, include page references in the appropriate fields.{context_text}{prefs_text}"""
 
             messages = [
                 SystemMessage(content=system_prompt),
@@ -91,10 +112,19 @@ Make sure the plan is comprehensive, well-structured, and suitable for self-stud
             # Try to parse as JSON
             try:
                 plan_data = json.loads(response.content)
+                
+                # Add source provenance if not included by LLM
+                if source_pages and "source_references" not in plan_data:
+                    plan_data["source_references"] = [
+                        f"{src['filename']} (Page {src['page']})" 
+                        for src in source_pages
+                    ]
+                
                 logger.info(f"Successfully created study plan for topic: {topic}")
                 return {
                     "success": True,
                     "plan": plan_data,
+                    "source_pages": source_pages,
                     "raw_response": response.content
                 }
             except json.JSONDecodeError:
