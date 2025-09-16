@@ -23,7 +23,8 @@ class InteractionLogger:
                 json.dump([], f)
     
     def log_interaction(self, session_id: str, query: str, response: str, 
-                       context_chunks: List[Dict], agent_steps: List[Dict]):
+                       context_chunks: List[Dict], agent_steps: List[Dict],
+                       sources: List[Dict] = None, confidence: float = None):
         """
         Log a complete chat interaction
         
@@ -33,6 +34,8 @@ class InteractionLogger:
             response: AI's response
             context_chunks: Retrieved context chunks
             agent_steps: LangGraph agent execution steps
+            sources: Source provenance information
+            confidence: Confidence score for the response
         """
         try:
             # Load existing logs
@@ -55,6 +58,8 @@ class InteractionLogger:
                     for chunk in context_chunks
                 ],
                 "agent_steps": agent_steps,
+                "sources": sources or [],
+                "confidence": confidence,
                 "metadata": {
                     "num_chunks_retrieved": len(context_chunks),
                     "num_agent_steps": len(agent_steps)
