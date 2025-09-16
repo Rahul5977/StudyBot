@@ -9,6 +9,8 @@ import logging
 
 from ..services.simple_rag import simple_rag_pipeline
 from ..agents.conductor import ConductorAgent
+from ..agents.flashcards import FlashcardAgent
+from ..agents.tutor import TutorAgent
 from ..core.logger import interaction_logger
 from ..core.embeddings import get_embeddings_service
 
@@ -21,6 +23,7 @@ class ChatRequest(BaseModel):
     session_id: Optional[str] = None
     use_multi_agent: bool = True
     doc_id: Optional[str] = None  # Filter to specific document
+    generate_flashcards: bool = False  # Auto-generate flashcards from response
 
 class ChatResponse(BaseModel):
     response: str
@@ -30,10 +33,17 @@ class ChatResponse(BaseModel):
     intent: Optional[str] = None
     search_results: Optional[List[Dict[str, Any]]] = None
     study_plan: Optional[Dict[str, Any]] = None
+    sources: Optional[List[Dict[str, Any]]] = None  # Source provenance
+    confidence: Optional[float] = None
+    flashcards: Optional[List[Dict[str, Any]]] = None  # Generated flashcards
 
 class LogsResponse(BaseModel):
     interactions: List[Dict[str, Any]]
     total: int
+
+# Initialize agents
+flashcard_agent = FlashcardAgent()
+tutor_agent = TutorAgent()
 
 @router.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest) -> ChatResponse:
@@ -52,23 +62,51 @@ async def chat(request: ChatRequest) -> ChatResponse:
             result = await conductor.process_query(request.query, doc_id=request.doc_id)
             
             if result["success"]:
+                # Generate flashcards if requested
+                flashcards = None
+                if request.generate_flashcards and result.get("context_chunks"):
+                    try:
+                        flashcards = flashcard_agent.generate_flashcards(
+                            context_chunks=result["context_chunks"],
+                            topic=result.get("intent", "Study Topic")
+                        )
+                    except Exception as e:
+                        logger.error(f"Error generating flashcards: {e}")
+                
+                # Get enhanced response from TutorAgent with provenance
+                tutor_result = await tutor_agent.generate_response(
+                    query=request.query,
+                    context_chunks=result.get("context_chunks", []),
+                    doc_id=request.doc_id
+                )
+                
+                # Use tutor response if available, otherwise use conductor response
+                response_text = tutor_result.get("response") or result["response"]
+                sources = tutor_result.get("sources", [])
+                confidence = tutor_result.get("confidence")
+                
                 # Log interaction
                 interaction_logger.log_interaction(
                     session_id=session_id,
                     query=request.query,
-                    response=result["response"],
+                    response=response_text,
                     context_chunks=result.get("context_chunks", []),
-                    agent_steps=result.get("steps", [])
+                    agent_steps=result.get("steps", []),
+                    sources=sources,
+                    confidence=confidence
                 )
                 
                 return ChatResponse(
-                    response=result["response"],
+                    response=response_text,
                     context_chunks=result.get("context_chunks", []),
                     agent_steps=result.get("steps", []),
                     session_id=session_id,
                     intent=result.get("intent"),
                     search_results=result.get("search_results", []),
-                    study_plan=result.get("study_plan")
+                    study_plan=result.get("study_plan"),
+                    sources=sources,
+                    confidence=confidence,
+                    flashcards=flashcards
                 )
             else:
                 raise HTTPException(
