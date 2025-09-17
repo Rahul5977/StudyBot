@@ -1,0 +1,195 @@
+[
+  {
+    "id": "flashcard_1758037248.116576_0",
+    "question": "What is machine learning?",
+    "answer": "Machine learning is a subset of artificial intelligence that focuses on algorithms that learn from data, enabling systems to improve their performance on tasks over time without being explicitly programmed.",
+    "difficulty": "easy",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T21:10:48.116603",
+    "next_review": "2025-09-23T23:23:09.145772",
+    "review_count": 1,
+    "success_count": 1,
+    "last_result": "easy",
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ],
+    "last_reviewed": "2025-09-16T23:23:09.145737"
+  },
+  {
+    "id": "flashcard_1758037248.116618_1",
+    "question": "How does machine learning differ from traditional programming?",
+    "answer": "In traditional programming, a programmer writes specific instructions for a computer to follow, while in machine learning, algorithms are trained on data to identify patterns and make decisions based on that data, allowing for adaptability and learning.",
+    "difficulty": "medium",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T21:10:48.116621",
+    "next_review": "2025-09-17T21:10:48.116623",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1758037248.116626_2",
+    "question": "Give an example of an application of machine learning.",
+    "answer": "An example of an application of machine learning is in email filtering, where algorithms learn to classify emails as spam or not spam based on patterns in the data from previous emails.",
+    "difficulty": "medium",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T21:10:48.116629",
+    "next_review": "2025-09-17T21:10:48.116630",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1758037248.116633_3",
+    "question": "What role does data play in machine learning?",
+    "answer": "Data is crucial in machine learning as it is used to train algorithms, allowing them to learn from examples and improve their accuracy in making predictions or decisions based on new, unseen data.",
+    "difficulty": "hard",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T21:10:48.116635",
+    "next_review": "2025-09-17T21:10:48.116636",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1758044796.100843_0",
+    "question": "What is machine learning?",
+    "answer": "Machine learning is a subset of artificial intelligence that focuses on algorithms that learn from data, enabling systems to improve their performance on tasks over time without being explicitly programmed.",
+    "difficulty": "easy",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T23:16:36.100914",
+    "next_review": "2025-09-17T23:16:36.100931",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1758044796.100975_1",
+    "question": "How does machine learning differ from traditional programming?",
+    "answer": "Unlike traditional programming, where a programmer explicitly defines rules and logic, machine learning allows algorithms to identify patterns and make decisions based on data, adapting and improving as more data is provided.",
+    "difficulty": "medium",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T23:16:36.100987",
+    "next_review": "2025-09-17T23:16:36.100991",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1758044796.101001_2",
+    "question": "Give an example of an application of machine learning.",
+    "answer": "An example of an application of machine learning is in email filtering, where algorithms learn to classify emails as spam or not spam based on patterns in the data from previous emails.",
+    "difficulty": "medium",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T23:16:36.101008",
+    "next_review": "2025-09-17T23:16:36.101011",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1758044796.101019_3",
+    "question": "What role does data play in machine learning?",
+    "answer": "Data is crucial in machine learning as it serves as the foundation for training algorithms. The quality and quantity of data directly impact the model's ability to learn and make accurate predictions.",
+    "difficulty": "hard",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T23:16:36.101025",
+    "next_review": "2025-09-17T23:16:36.101028",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1758045145.596079_0",
+    "question": "What is machine learning?",
+    "answer": "Machine learning is a subset of artificial intelligence that focuses on algorithms that learn from data, enabling systems to improve their performance on tasks through experience without being explicitly programmed.",
+    "difficulty": "easy",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T23:22:25.596116",
+    "next_review": "2025-09-17T23:22:25.596129",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1758045145.596153_1",
+    "question": "How does machine learning differ from traditional programming?",
+    "answer": "In traditional programming, a programmer writes explicit instructions for the computer to follow. In contrast, machine learning allows algorithms to learn patterns and make decisions based on data, adapting over time without direct human intervention.",
+    "difficulty": "medium",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T23:22:25.596162",
+    "next_review": "2025-09-17T23:22:25.596165",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1758045145.596175_2",
+    "question": "Give an example of a machine learning application.",
+    "answer": "An example of a machine learning application is email filtering, where algorithms analyze incoming emails to classify them as spam or not spam based on learned patterns from previous emails.",
+    "difficulty": "medium",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T23:22:25.596181",
+    "next_review": "2025-09-17T23:22:25.596185",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1758045145.596192_3",
+    "question": "What role does data play in machine learning?",
+    "answer": "Data is crucial in machine learning as it serves as the foundation for training algorithms. The quality and quantity of data directly influence the model's ability to learn and make accurate predictions.",
+    "difficulty": "hard",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T23:22:25.596197",
+    "next_review": "2025-09-17T23:22:25.596200",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  }
+]

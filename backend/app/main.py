@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .api.routes_docs import router as docs_router
 from .api.routes_chat import router as chat_router
 from .api.routes_plan import router as plan_router
+from .api.routes_flashcards import router as flashcards_router
 from .core.logger import setup_logging
 import os
 
@@ -22,11 +23,13 @@ app.add_middleware(
 
 # Create storage directory if it doesn't exist
 os.makedirs("storage", exist_ok=True)
+os.makedirs("data", exist_ok=True)  # For flashcards
 
 # Include routers
 app.include_router(docs_router, prefix="/api")
 app.include_router(chat_router, prefix="/api")
 app.include_router(plan_router, prefix="/api/plan")
+app.include_router(flashcards_router, prefix="/api")
 
 @app.get("/ping")
 async def ping():
@@ -42,6 +45,8 @@ async def root():
             "RAG-based chat",
             "Multi-agent orchestration",
             "Study plan generation",
-            "Web search integration"
+            "Web search integration",
+            "Flashcard generation",
+            "Spaced repetition learning"
         ]
     }
