@@ -39,16 +39,19 @@ const Flashcards = ({ darkMode = false }) => {
     const currentCard = flashcards[currentIndex];
 
     try {
-      const response = await fetch("http://localhost:8000/api/flashcards/review", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          flashcard_id: currentCard.id,
-          difficulty: difficulty,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/flashcards/review",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            flashcard_id: currentCard.id,
+            difficulty: difficulty,
+          }),
+        }
+      );
 
       if (response.ok) {
         // Remove the reviewed card from the current session
