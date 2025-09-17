@@ -1,5 +1,12 @@
 # StudyBuddy AI
 
+**Name: Rahul Raj**
+
+**Institute : Indian Institute of Technology Bhilai**
+
+**Department : Computer Science and Engineering**
+
+
 **An Intelligent Study Companion Powered by Multi-Agent AI**
 
 StudyBuddy AI transforms static documents into interactive, adaptive learning experiences using advanced AI technologies. Upload your PDFs and Excel files to get personalized tutoring, automated study plans, AI-powered flashcards, and intelligent document analysis.
