@@ -63,8 +63,8 @@ StudyBuddy AI transforms static documents into interactive, adaptive learning ex
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/studybuddy-ai.git
-   cd studybuddy-ai
+   git clone (https://github.com/Rahul5977/StudyBot)
+   cd StudyBuddy
    ```
 
 2. **Set up environment variables**
