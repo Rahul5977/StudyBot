@@ -3,10 +3,12 @@ import UploadForm from "../components/UploadForm";
 import ChatBox from "../components/ChatBox";
 import StepsVisualizer from "../components/StepsVisualizer";
 import PlanEditor from "../components/PlanEditor";
-import { createStudyPlan, getPlanTemplate } from "../utils/api";
+import Dashboard from "../components/Dashboard";
+import Flashcards from "../components/Flashcards";
+import { createStudyPlan } from "../utils/api";
 
 const Home = () => {
-  const [activeTab, setActiveTab] = useState("upload");
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [currentSteps, setCurrentSteps] = useState([]);
   const [studyPlan, setStudyPlan] = useState(null);
   const [isCreatingPlan, setIsCreatingPlan] = useState(false);
@@ -176,6 +178,18 @@ const Home = () => {
               📤 Upload Documents
             </button>
             <button
+              onClick={() => setActiveTab("dashboard")}
+              className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                activeTab === "dashboard"
+                  ? "bg-blue-600 text-white shadow-lg"
+                  : darkMode
+                  ? "text-gray-300 hover:text-blue-400"
+                  : "text-gray-600 hover:text-blue-600"
+              }`}
+            >
+              📊 Dashboard
+            </button>
+            <button
               onClick={() => setActiveTab("chat")}
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                 activeTab === "chat"
@@ -198,6 +212,18 @@ const Home = () => {
               }`}
             >
               📋 Study Plans
+            </button>
+            <button
+              onClick={() => setActiveTab("flashcards")}
+              className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                activeTab === "flashcards"
+                  ? "bg-blue-600 text-white shadow-lg"
+                  : darkMode
+                  ? "text-gray-300 hover:text-blue-400"
+                  : "text-gray-600 hover:text-blue-600"
+              }`}
+            >
+              📚 Flashcards
             </button>
           </div>
         </div>
@@ -230,6 +256,28 @@ const Home = () => {
                 </p>
               </div>
               <UploadForm darkMode={darkMode} />
+            </div>
+          )}
+
+          {activeTab === "dashboard" && (
+            <div className="p-10">
+              <div className="text-center mb-8">
+                <h2
+                  className={`text-3xl font-bold ${
+                    darkMode ? "text-white" : "text-gray-900"
+                  } mb-3`}
+                >
+                  Dashboard
+                </h2>
+                <p
+                  className={`text-lg ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
+                  Overview of your study progress and document insights
+                </p>
+              </div>
+              <Dashboard darkMode={darkMode} />
             </div>
           )}
 
@@ -403,6 +451,29 @@ const Home = () => {
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {activeTab === "flashcards" && (
+            <div className="p-10">
+              <div className="text-center mb-8">
+                <h2
+                  className={`text-3xl font-bold ${
+                    darkMode ? "text-white" : "text-gray-900"
+                  } mb-3`}
+                >
+                  Study with Flashcards
+                </h2>
+                <p
+                  className={`text-lg ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
+                  Review important concepts and terms using AI-generated
+                  flashcards
+                </p>
+              </div>
+              <Flashcards darkMode={darkMode} />
             </div>
           )}
         </div>
