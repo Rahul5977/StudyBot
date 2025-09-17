@@ -4,8 +4,6 @@
 
 StudyBuddy AI transforms static documents into interactive, adaptive learning experiences using advanced AI technologies. Upload your PDFs and Excel files to get personalized tutoring, automated study plans, AI-powered flashcards, and intelligent document analysis.
 
-![StudyBuddy AI Demo](https://via.placeholder.com/800x400/4F46E5/FFFFFF?text=StudyBuddy+AI+Dashboard)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![React](https://img.shields.io/badge/React-18.2.0-61dafb.svg)](https://reactjs.org/)
@@ -766,3 +764,8 @@ Special thanks to the amazing open-source community and the following projects t
 [🌟 Star on GitHub](https://github.com/yourusername/studybuddy-ai) • [🐛 Report Bug](https://github.com/yourusername/studybuddy-ai/issues) • [💡 Request Feature](https://github.com/yourusername/studybuddy-ai/issues)
 
 </div>
+![147010BE-B2EE-49F1-9AF2-41CE730A1AB5](https://github.com/user-attachments/assets/45b0f5b3-a89c-4454-af63-06cda9b3b830)
+![E6B7CDCF-3E47-459C-904E-819DD4CCC898](https://github.com/user-attachments/assets/babb4f64-fae6-4879-8708-42f004b9e0f2)
+![9235506C-A7EA-4084-9141-2654BEFCCD56](https://github.com/user-attachments/assets/9d32c7ec-f17a-4009-b8fc-82b0949dd3d2)
+
+
