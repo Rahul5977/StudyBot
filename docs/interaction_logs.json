@@ -1,1 +1,318 @@
-{}
+{
+  "sample_interactions": [
+    {
+      "log_id": "interaction_001",
+      "timestamp": "2025-01-16T14:23:15Z",
+      "session_id": "session_demo_001",
+      "user_query": "Create a study plan for machine learning fundamentals",
+      "intent": "planning",
+      "agent_workflow": [
+        {
+          "agent": "conductor",
+          "action": "analyze_intent",
+          "duration_ms": 150,
+          "result": "planning_workflow"
+        },
+        {
+          "agent": "retriever",
+          "action": "search_documents",
+          "duration_ms": 800,
+          "result": "found_12_relevant_chunks"
+        },
+        {
+          "agent": "planner",
+          "action": "generate_study_plan",
+          "duration_ms": 2300,
+          "result": "comprehensive_6_week_plan"
+        }
+      ],
+      "context_sources": [
+        {
+          "document": "machine_learning_textbook.pdf",
+          "pages": [1, 15, 23, 45, 67],
+          "relevance_score": 0.94,
+          "sections": ["Introduction", "Linear Regression", "Classification"]
+        },
+        {
+          "document": "ai_fundamentals.pdf",
+          "pages": [8, 12, 29],
+          "relevance_score": 0.87,
+          "sections": ["Neural Networks", "Deep Learning Basics"]
+        }
+      ],
+      "generated_plan": {
+        "title": "Machine Learning Fundamentals - 6 Week Study Plan",
+        "sections_count": 4,
+        "estimated_duration": "6 weeks",
+        "difficulty": "Intermediate"
+      },
+      "processing_time_ms": 3250,
+      "user_feedback": "very_helpful",
+      "provenance": {
+        "sources_cited": 5,
+        "pages_referenced": 11,
+        "confidence_score": 0.91
+      }
+    },
+    {
+      "log_id": "interaction_002",
+      "timestamp": "2025-01-16T14:28:42Z",
+      "session_id": "session_demo_001",
+      "user_query": "Explain gradient descent with a simple example",
+      "intent": "tutoring",
+      "agent_workflow": [
+        {
+          "agent": "conductor",
+          "action": "analyze_intent",
+          "duration_ms": 120,
+          "result": "tutoring_workflow"
+        },
+        {
+          "agent": "retriever",
+          "action": "search_context",
+          "duration_ms": 650,
+          "result": "found_8_relevant_chunks"
+        },
+        {
+          "agent": "tutor",
+          "action": "generate_educational_response",
+          "duration_ms": 1800,
+          "result": "detailed_explanation_with_example"
+        },
+        {
+          "agent": "flashcard_generator",
+          "action": "create_flashcards",
+          "duration_ms": 400,
+          "result": "generated_3_flashcards"
+        },
+        {
+          "agent": "logger",
+          "action": "save_interaction",
+          "duration_ms": 50,
+          "result": "logged_successfully"
+        }
+      ],
+      "context_sources": [
+        {
+          "document": "machine_learning_textbook.pdf",
+          "pages": [45, 46, 47],
+          "relevance_score": 0.96,
+          "sections": ["Optimization", "Gradient Descent Algorithm"]
+        },
+        {
+          "document": "calculus_review.pdf",
+          "pages": [12, 13],
+          "relevance_score": 0.82,
+          "sections": ["Derivatives", "Chain Rule"]
+        }
+      ],
+      "response_preview": "Gradient descent is an optimization algorithm used to minimize functions by iteratively moving toward the steepest descent...",
+      "flashcards_generated": [
+        {
+          "question": "What is the primary purpose of gradient descent?",
+          "answer": "To find the minimum of a function by following the negative gradient",
+          "difficulty": "medium"
+        },
+        {
+          "question": "What does the learning rate control in gradient descent?",
+          "answer": "The size of steps taken toward the minimum",
+          "difficulty": "easy"
+        },
+        {
+          "question": "What can happen if the learning rate is too large?",
+          "answer": "The algorithm may overshoot the minimum and fail to converge",
+          "difficulty": "hard"
+        }
+      ],
+      "processing_time_ms": 3020,
+      "user_feedback": "helpful",
+      "provenance": {
+        "sources_cited": 2,
+        "pages_referenced": 5,
+        "confidence_score": 0.88
+      }
+    },
+    {
+      "log_id": "interaction_003",
+      "timestamp": "2025-01-16T14:35:18Z",
+      "session_id": "session_demo_001",
+      "user_query": "What are the latest developments in transformer architectures?",
+      "intent": "search_and_chat",
+      "agent_workflow": [
+        {
+          "agent": "conductor",
+          "action": "analyze_intent",
+          "duration_ms": 140,
+          "result": "search_workflow"
+        },
+        {
+          "agent": "search_agent",
+          "action": "web_search",
+          "duration_ms": 2200,
+          "result": "found_recent_papers_and_articles"
+        },
+        {
+          "agent": "retriever",
+          "action": "search_local_context",
+          "duration_ms": 600,
+          "result": "found_3_relevant_chunks"
+        },
+        {
+          "agent": "tutor",
+          "action": "synthesize_information",
+          "duration_ms": 1900,
+          "result": "comprehensive_overview"
+        }
+      ],
+      "context_sources": [
+        {
+          "type": "web_search",
+          "urls": [
+            "https://arxiv.org/abs/2023.12345",
+            "https://huggingface.co/blog/transformer-developments",
+            "https://openai.com/research/gpt-4-architecture"
+          ],
+          "relevance_score": 0.93,
+          "search_terms": [
+            "transformer architecture",
+            "attention mechanism",
+            "2024 developments"
+          ]
+        },
+        {
+          "type": "local_document",
+          "document": "deep_learning_survey.pdf",
+          "pages": [78, 79, 80],
+          "relevance_score": 0.79,
+          "sections": ["Attention Mechanisms", "Transformer Models"]
+        }
+      ],
+      "external_sources": [
+        {
+          "title": "Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+          "url": "https://arxiv.org/abs/2312.00752",
+          "summary": "Novel architecture that challenges transformer dominance",
+          "date": "2023-12-01"
+        },
+        {
+          "title": "Mixture of Experts: Scaling Transformer Models",
+          "url": "https://arxiv.org/abs/2024.01234",
+          "summary": "Efficient scaling through sparse expert models",
+          "date": "2024-01-15"
+        }
+      ],
+      "processing_time_ms": 4840,
+      "user_feedback": "informative",
+      "provenance": {
+        "sources_cited": 5,
+        "external_urls": 3,
+        "local_pages": 3,
+        "confidence_score": 0.86
+      }
+    },
+    {
+      "log_id": "interaction_004",
+      "timestamp": "2025-01-16T14:42:33Z",
+      "session_id": "session_demo_002",
+      "user_query": "Review my flashcards on linear algebra",
+      "intent": "flashcard_review",
+      "agent_workflow": [
+        {
+          "agent": "conductor",
+          "action": "analyze_intent",
+          "duration_ms": 100,
+          "result": "flashcard_workflow"
+        },
+        {
+          "agent": "flashcard_agent",
+          "action": "get_due_cards",
+          "duration_ms": 200,
+          "result": "found_7_due_cards"
+        },
+        {
+          "agent": "flashcard_agent",
+          "action": "apply_spaced_repetition",
+          "duration_ms": 150,
+          "result": "scheduled_next_reviews"
+        }
+      ],
+      "flashcards_reviewed": [
+        {
+          "question": "What is a vector space?",
+          "user_response": "easy",
+          "next_review": "2025-01-23T14:42:33Z",
+          "interval_days": 7
+        },
+        {
+          "question": "How do you compute the dot product?",
+          "user_response": "hard",
+          "next_review": "2025-01-17T14:42:33Z",
+          "interval_days": 1
+        },
+        {
+          "question": "What is eigenvalue decomposition?",
+          "user_response": "easy",
+          "next_review": "2025-01-23T14:42:33Z",
+          "interval_days": 7
+        }
+      ],
+      "session_stats": {
+        "cards_reviewed": 7,
+        "marked_easy": 5,
+        "marked_hard": 2,
+        "average_response_time": 8.5,
+        "session_duration": 285
+      },
+      "processing_time_ms": 450,
+      "user_feedback": "satisfied",
+      "learning_progress": {
+        "total_cards": 23,
+        "mastered": 15,
+        "learning": 6,
+        "new": 2,
+        "retention_rate": 0.87
+      }
+    }
+  ],
+  "session_summary": {
+    "demo_session_001": {
+      "start_time": "2025-01-16T14:20:00Z",
+      "end_time": "2025-01-16T14:40:00Z",
+      "total_interactions": 3,
+      "workflow_types": ["planning", "tutoring", "search_and_chat"],
+      "documents_accessed": [
+        "machine_learning_textbook.pdf",
+        "ai_fundamentals.pdf",
+        "calculus_review.pdf",
+        "deep_learning_survey.pdf"
+      ],
+      "flashcards_generated": 3,
+      "user_satisfaction": "high",
+      "avg_response_time": 3703
+    },
+    "demo_session_002": {
+      "start_time": "2025-01-16T14:42:00Z",
+      "end_time": "2025-01-16T14:50:00Z",
+      "total_interactions": 1,
+      "workflow_types": ["flashcard_review"],
+      "flashcards_reviewed": 7,
+      "learning_progress": "strong",
+      "user_satisfaction": "high",
+      "avg_response_time": 450
+    }
+  },
+  "system_metrics": {
+    "total_documents_processed": 15,
+    "total_interactions_logged": 127,
+    "avg_processing_time_ms": 2840,
+    "user_satisfaction_rate": 0.94,
+    "flashcard_retention_rate": 0.87,
+    "most_common_intents": ["tutoring", "planning", "flashcard_review"],
+    "peak_usage_hours": ["14:00-16:00", "19:00-21:00"],
+    "document_types": {
+      "pdf": 12,
+      "excel": 3
+    },
+    "study_plan_completion_rate": 0.78
+  }
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "flashcard_1757981499.818509_0",
+    "question": "What is machine learning?",
+    "answer": "Machine learning is a subset of artificial intelligence that focuses on algorithms that learn from data, enabling systems to improve their performance on tasks through experience without being explicitly programmed.",
+    "difficulty": "easy",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T05:41:39.818577",
+    "next_review": "2025-09-17T05:41:39.818586",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1757981499.818622_1",
+    "question": "How does machine learning differ from traditional programming?",
+    "answer": "In traditional programming, explicit instructions are provided to perform a task, while in machine learning, algorithms are trained on data to identify patterns and make decisions based on that data, allowing for adaptability and improvement over time.",
+    "difficulty": "medium",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T05:41:39.818626",
+    "next_review": "2025-09-17T05:41:39.818628",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1757981499.818633_2",
+    "question": "Give an example of an application of machine learning.",
+    "answer": "An example of an application of machine learning is in email filtering, where algorithms learn to classify emails as spam or not spam based on features extracted from previous emails.",
+    "difficulty": "medium",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T05:41:39.818636",
+    "next_review": "2025-09-17T05:41:39.818638",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1757981499.818641_3",
+    "question": "What role does data play in machine learning?",
+    "answer": "Data is crucial in machine learning as it serves as the foundation for training algorithms. The quality and quantity of data directly affect the performance and accuracy of the machine learning models.",
+    "difficulty": "hard",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T05:41:39.818644",
+    "next_review": "2025-09-17T05:41:39.818645",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  },
+  {
+    "id": "flashcard_1757981499.818648_4",
+    "question": "What is the relationship between machine learning and artificial intelligence?",
+    "answer": "Machine learning is a subset of artificial intelligence (AI). While AI encompasses a broad range of technologies and approaches aimed at simulating human intelligence, machine learning specifically focuses on the development of algorithms that can learn from and make predictions based on data.",
+    "difficulty": "medium",
+    "source_info": "ml_intro.pdf, Page 1",
+    "created_at": "2025-09-16T05:41:39.818651",
+    "next_review": "2025-09-17T05:41:39.818652",
+    "review_count": 0,
+    "success_count": 0,
+    "last_result": null,
+    "topic": "Machine Learning",
+    "source_chunks": [
+      "ml_intro.pdf"
+    ]
+  }
+]
