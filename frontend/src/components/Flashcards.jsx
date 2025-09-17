@@ -22,7 +22,7 @@ const Flashcards = ({ darkMode = false }) => {
   const fetchFlashcards = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/flashcards");
+      const response = await fetch("http://localhost:8000/api/flashcards");
       const data = await response.json();
       setFlashcards(data.flashcards || []);
     } catch (error) {
@@ -39,7 +39,7 @@ const Flashcards = ({ darkMode = false }) => {
     const currentCard = flashcards[currentIndex];
 
     try {
-      const response = await fetch("/api/flashcards/review", {
+      const response = await fetch("http://localhost:8000/api/flashcards/review", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
